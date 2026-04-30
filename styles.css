@@ -100,6 +100,12 @@ body {
   object-fit: cover;
 }
 
+.photo-card--poster img {
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
 .photo-card figcaption {
   padding: 12px;
   font-size: 0.84rem;
@@ -469,12 +475,16 @@ textarea {
     gap: 10px;
   }
 
-  .photo-card--wide {
+  .photo-card--poster {
     grid-row: auto;
   }
 
   .photo-card img {
     height: 120px;
+  }
+
+  .photo-card--poster img {
+    height: auto;
   }
 
   .photo-card figcaption {
