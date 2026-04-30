@@ -253,6 +253,7 @@ h2 {
   display: grid;
   place-items: center;
   padding: 20px;
+  pointer-events: none;
 }
 
 .success-modal__backdrop {
@@ -260,6 +261,7 @@ h2 {
   inset: 0;
   background: rgba(2, 6, 23, 0.64);
   backdrop-filter: blur(8px);
+  pointer-events: auto;
 }
 
 .success-modal__panel {
@@ -270,6 +272,7 @@ h2 {
   display: grid;
   gap: 14px;
   text-align: center;
+  pointer-events: auto;
 }
 
 .success-modal__button {

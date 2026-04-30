@@ -142,3 +142,12 @@ if (!googleSheetsEndpoint) {
 closeSuccessButtons.forEach((button) => {
   button.addEventListener("click", hideSuccessModal);
 });
+
+successModal.addEventListener("click", (event) => {
+  if (event.target.closest("[data-close-success]")) {
+    hideSuccessModal();
+  }
+});
+
+hideSuccessModal();
+window.addEventListener("pageshow", hideSuccessModal);
