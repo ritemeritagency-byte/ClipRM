@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Follow-Up Sign Up Form</title>
+    <meta
+      name="description"
+      content="Lead callback form for Rite Merit International Recruitment Agency."
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="google-sheets-web-app-url" content="" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="agency-banner panel">
+        <div>
+          <p class="eyebrow">Rite Merit International Recruitment Agency</p>
+          <h1>Follow-Up Sign Up Form</h1>
+          <p class="subtitle">
+            Let applicants sign up for a follow-up call or a visit to the office
+            for UAE Dubai and Qatar job openings.
+          </p>
+          <p class="rep-line">Representative: <strong>Clip</strong></p>
+          <p class="contact-line">
+            Message via SMS:
+            <a href="sms:+639266406364">+63 926 640 6364</a>
+          </p>
+        </div>
+
+        <div class="banner-cards">
+          <figure class="photo-card photo-card--wide">
+            <img src="Photos/header poster.png" alt="Rite Merit International Recruitment Agency header poster" />
+            <figcaption>Agency recruitment campaign</figcaption>
+          </figure>
+          <figure class="photo-card photo-card--logo">
+            <img src="Photos/rm logo.jpeg" alt="Rite Merit International Recruitment Agency logo" />
+            <figcaption>Official agency logo</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Overseas hiring</p>
+          <h2>Sign up for follow-up</h2>
+          <p class="subtitle">
+            Use this form to collect the exact details needed for a callback or
+            office visit schedule.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-card__badge">Roles</div>
+          <ul>
+            <li>Household Worker</li>
+            <li>Babysitter</li>
+            <li>House Cook</li>
+            <li>Lady Driver</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="form-grid">
+        <form id="leadForm" class="panel form-panel">
+          <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
+          <input type="hidden" name="representativeName" value="Clip" />
+          <div class="panel-header">
+            <h2>Follow-Up Details</h2>
+            <p>Fill in the basic info to sign up for a call or office visit.</p>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Full Name</span>
+              <input name="fullName" type="text" placeholder="Enter full name" required />
+            </label>
+
+            <label class="field">
+              <span>Phone Number</span>
+              <input name="phoneNumber" type="tel" placeholder="+971..." required />
+            </label>
+
+            <label class="field">
+              <span>Location</span>
+              <input name="location" type="text" placeholder="City / area" required />
+            </label>
+
+            <label class="field">
+              <span>Desired Position</span>
+              <select name="desiredPosition" required>
+                <option value="">Select position</option>
+                <option>Household Worker</option>
+                <option>Babysitter</option>
+                <option>House Cook</option>
+                <option>Lady Driver</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Desired Country</span>
+              <select name="desiredCountry" required>
+                <option value="">Select country</option>
+                <option>UAE Dubai</option>
+                <option>Qatar</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Passport Status</span>
+              <select name="passportStatus" required>
+                <option value="">Select status</option>
+                <option>Available</option>
+                <option>Not Available</option>
+                <option>In Process</option>
+                <option>Expired</option>
+              </select>
+            </label>
+
+            <label class="field field--full">
+              <span>Schedule for Call or Visit to Office</span>
+              <input
+                name="schedule"
+                type="datetime-local"
+                required
+              />
+            </label>
+
+            <fieldset class="field field--full choice-group">
+              <legend>Preferred Follow-Up Type</legend>
+              <label class="choice">
+                <input type="radio" name="followUpType" value="Call" required />
+                <span>Call</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="followUpType" value="Visit Office" />
+                <span>Visit Office</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="followUpType" value="Either" />
+                <span>Either</span>
+              </label>
+            </fieldset>
+
+            <label class="field field--full">
+              <span>Notes</span>
+              <textarea
+                name="notes"
+                rows="4"
+                placeholder="Add any extra details here"
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="primary-btn">Sign Up Follow-Up</button>
+            <button type="button" id="clearBtn" class="secondary-btn">Clear Form</button>
+            <a class="sms-btn" href="sms:+639266406364">Message SMS</a>
+          </div>
+
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+
+          <p class="sheet-note">
+            Google Sheets sync: set your Apps Script web app URL in
+            the page meta tag or in <code>script.js</code>.
+          </p>
+        </form>
+
+        <aside class="panel list-panel">
+          <div class="panel-header">
+            <h2>Saved Leads</h2>
+            <p>Stored locally in this browser for quick review.</p>
+          </div>
+
+          <div id="leadList" class="lead-list" aria-live="polite"></div>
+        </aside>
+      </section>
+    </main>
+
+    <template id="leadItemTemplate">
+      <article class="lead-item">
+        <div class="lead-item__top">
+          <strong data-name></strong>
+          <span data-country></span>
+        </div>
+        <p data-meta></p>
+        <p data-schedule></p>
+        <p data-notes></p>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
