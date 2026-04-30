@@ -801,44 +801,6 @@ textarea:focus {
   grid-template-columns: 1fr;
 }
 
-.list-panel {
-  margin-top: 4px;
-}
-
-.lead-list {
-  padding: 20px 28px 28px;
-  gap: 12px;
-}
-
-.lead-item {
-  background: #fff;
-  border: 1px solid #eceff3;
-  box-shadow: none;
-}
-
-.lead-item__top strong {
-  color: var(--gf-text);
-}
-
-.lead-item__top span {
-  color: var(--gf-accent);
-}
-
-.lead-item p {
-  color: var(--gf-muted);
-}
-
-.lead-item p:last-child {
-  color: var(--gf-danger);
-}
-
-.empty-state {
-  margin: 0 28px 28px;
-  border-color: #d7dce1;
-  color: var(--gf-muted);
-  background: #fff;
-}
-
 @media (max-width: 760px) {
   .app-shell {
     width: min(100% - 16px, 920px);
@@ -856,13 +818,10 @@ textarea:focus {
 
   .form-hero__copy,
   .form-panel__header,
-  .list-panel .panel-header,
   .form-section,
   .actions,
   .form-status,
-  .sheet-note,
-  .lead-list,
-  .empty-state {
+  .sheet-note {
     padding-left: 16px;
     padding-right: 16px;
   }

@@ -1,36 +1,15 @@
 const form = document.getElementById("leadForm");
-const leadList = document.getElementById("leadList");
 const clearBtn = document.getElementById("clearBtn");
-const template = document.getElementById("leadItemTemplate");
 const statusEl = document.getElementById("formStatus");
-const storageKey = "rmia-lead-callbacks";
 
 const googleSheetsEndpoint =
   document.querySelector('meta[name="google-sheets-web-app-url"]')?.content?.trim() ||
   window.GOOGLE_SHEETS_WEB_APP_URL ||
   "";
 
-const dateTimeFormatter = new Intl.DateTimeFormat([], {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
-
 function setStatus(message, state = "") {
   statusEl.textContent = message;
   statusEl.dataset.state = state;
-}
-
-function readLeads() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(storageKey));
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLeads(leads) {
-  localStorage.setItem(storageKey, JSON.stringify(leads));
 }
 
 function clean(value) {
@@ -85,42 +64,6 @@ async function syncLeadToGoogleSheets(lead) {
   return { synced: true };
 }
 
-function formatSchedule(value) {
-  if (!value) return "Schedule: not set";
-  const date = new Date(value);
-  return `Schedule: ${dateTimeFormatter.format(date)}`;
-}
-
-function escapeText(value) {
-  return clean(value);
-}
-
-function renderLeads() {
-  const leads = readLeads();
-  leadList.innerHTML = "";
-
-  if (!leads.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty-state";
-    empty.textContent = "No leads saved yet.";
-    leadList.appendChild(empty);
-    return;
-  }
-
-  [...leads]
-    .reverse()
-    .forEach((lead) => {
-      const node = template.content.cloneNode(true);
-      node.querySelector("[data-name]").textContent = escapeText(lead.fullName);
-      node.querySelector("[data-country]").textContent = escapeText(lead.desiredCountry);
-      node.querySelector("[data-meta]").textContent =
-        `${escapeText(lead.phoneNumber)} · ${escapeText(lead.location)} · ${escapeText(lead.desiredPosition)} · Passport: ${escapeText(lead.passportStatus)}`;
-      node.querySelector("[data-schedule]").textContent = formatSchedule(lead.schedule);
-      node.querySelector("[data-notes]").textContent = lead.notes ? `Notes: ${escapeText(lead.notes)}` : "";
-      leadList.appendChild(node);
-    });
-}
-
 function resetStatus() {
   setStatus("");
 }
@@ -144,22 +87,18 @@ form.addEventListener("submit", async (event) => {
       return;
     }
 
-    const leads = readLeads();
-    leads.push(lead);
-    writeLeads(leads);
-
     const syncResult = await syncLeadToGoogleSheets(lead);
     form.reset();
-    renderLeads();
 
     if (syncResult.synced) {
-      setStatus("Your response has been recorded and sent to Google Sheets.", "success");
+      setStatus("Thanks. Your details have been submitted successfully.", "success");
     } else {
-      setStatus("Your response has been recorded locally. Google Sheets endpoint is not configured.", "success");
+      setStatus("Thanks. Our representative will contact you shortly.", "success");
+      console.warn("Google Sheets endpoint is not configured.");
     }
   } catch (error) {
     console.error(error);
-    setStatus("Could not record your response right now. Please try again.", "error");
+    setStatus("We could not submit your form right now. Please try again.", "error");
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit";
@@ -171,8 +110,6 @@ clearBtn.addEventListener("click", () => {
   resetStatus();
 });
 
-renderLeads();
-
 if (!googleSheetsEndpoint) {
-  setStatus("Google Sheets sync is not configured yet.", "");
+  console.warn("Google Sheets sync is not configured yet.");
 }
