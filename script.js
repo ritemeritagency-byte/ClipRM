@@ -1,6 +1,7 @@
 const form = document.getElementById("leadForm");
 const statusEl = document.getElementById("formStatus");
-const successCard = document.getElementById("successCard");
+const successModal = document.getElementById("successModal");
+const closeSuccessButtons = document.querySelectorAll("[data-close-success]");
 
 const googleSheetsEndpoint =
   document.querySelector('meta[name="google-sheets-web-app-url"]')?.content?.trim() ||
@@ -75,9 +76,16 @@ function resetStatus() {
   setStatus("");
 }
 
-function showSuccessCard() {
-  form.hidden = true;
-  successCard.hidden = false;
+function showSuccessModal() {
+  successModal.hidden = false;
+  successModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function hideSuccessModal() {
+  successModal.hidden = true;
+  successModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
 }
 
 form.addEventListener("submit", async (event) => {
@@ -103,9 +111,9 @@ form.addEventListener("submit", async (event) => {
     form.reset();
 
     if (syncResult.synced) {
-      showSuccessCard();
+      showSuccessModal();
     } else {
-      showSuccessCard();
+      showSuccessModal();
       console.warn("Google Sheets endpoint is not configured.");
     }
   } catch (error) {
@@ -120,3 +128,7 @@ form.addEventListener("submit", async (event) => {
 if (!googleSheetsEndpoint) {
   console.warn("Google Sheets sync is not configured yet.");
 }
+
+closeSuccessButtons.forEach((button) => {
+  button.addEventListener("click", hideSuccessModal);
+});

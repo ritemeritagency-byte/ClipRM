@@ -32,9 +32,6 @@
             application is still with us, so fill out the form below and our
             representative will call you within 1 hour or at the time you choose.
           </p>
-          <div class="form-hero__meta">
-            <p class="rep-line">Representative: <strong>Clip</strong></p>
-          </div>
         </div>
 
         <figure class="hero-visual">
@@ -140,19 +137,24 @@
           <p class="sheet-note">A representative will contact you within 1 hour or at the time you selected.</p>
         </form>
 
-        <div id="successCard" class="panel success-card" hidden>
-          <div class="success-card__icon">✓</div>
-          <p class="section-kicker">Submission complete</p>
-          <h2>Thanks. Your details are in.</h2>
-          <p>
-            The representative will call you within 1 hour or at the time you selected.
-          </p>
-          <p class="success-card__meta">
-            If you need to update anything, please contact the agency directly.
-          </p>
-        </div>
       </section>
     </main>
+
+    <div id="successModal" class="success-modal" hidden aria-hidden="true">
+      <div class="success-modal__backdrop" data-close-success></div>
+      <div class="success-modal__panel panel" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+        <div class="success-card__icon">✓</div>
+        <p class="section-kicker">Submission complete</p>
+        <h2 id="successTitle">Thanks. Your details are in.</h2>
+        <p>
+          The representative will call you within 1 hour or at the time you selected.
+        </p>
+        <p class="success-card__meta">
+          If you need to update anything, please contact the agency directly.
+        </p>
+        <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
