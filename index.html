@@ -8,20 +8,20 @@
       name="description"
       content="A quick callback form for applicants who missed the representative's call."
     />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#673ab7" />
     <meta name="google-sheets-web-app-url" content="" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
-      <section class="agency-banner panel">
-        <div>
+      <header class="form-hero panel">
+        <div class="form-hero__copy">
           <p class="eyebrow">Rite Merit International Recruitment Agency</p>
           <h1>Missed the call?</h1>
           <p class="subtitle">
@@ -29,141 +29,132 @@
             application is still with us, so fill out the form below and our
             representative will call you back right away.
           </p>
-          <p class="rep-line">Representative: <strong>Clip</strong></p>
-          <p class="contact-line">
-            Message via SMS:
-            <a href="sms:+639266406364">+63 926 640 6364</a>
-          </p>
+          <div class="form-hero__meta">
+            <p class="rep-line">Representative: <strong>Clip</strong></p>
+            <p class="contact-line">
+              SMS:
+              <a href="sms:+639266406364">+63 926 640 6364</a>
+            </p>
+          </div>
         </div>
 
-        <div class="banner-cards">
-          <figure class="photo-card photo-card--poster">
-            <img src="Photos/FORM PHOTO .png" alt="Rite Merit International Recruitment Agency recruitment poster" />
-            <figcaption>Recruitment poster</figcaption>
-          </figure>
-          <figure class="photo-card photo-card--logo">
-            <img src="Photos/rm logo.jpeg" alt="Rite Merit International Recruitment Agency logo" />
-            <figcaption>Official agency logo</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Overseas hiring</p>
-          <h2>We’ll call you back</h2>
-          <p class="subtitle">
-            If you already applied and missed the call, use this form to request
-            an immediate callback or schedule a visit to the office.
-          </p>
-        </div>
-
-        <div class="hero-card">
-          <div class="hero-card__badge">Roles</div>
-          <ul>
-            <li>Household Worker</li>
-            <li>Babysitter</li>
-            <li>House Cook</li>
-            <li>Lady Driver</li>
-          </ul>
-        </div>
-      </section>
+        <figure class="hero-visual">
+          <img src="Photos/FORM PHOTO .png" alt="Rite Merit International Recruitment Agency recruitment poster" />
+          <figcaption>Recruitment poster</figcaption>
+        </figure>
+      </header>
 
       <section class="form-grid">
         <form id="leadForm" class="panel form-panel">
           <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
           <input type="hidden" name="representativeName" value="Clip" />
-          <div class="panel-header">
-            <h2>Callback Details</h2>
-            <p>Fill in your details so our representative can reach you quickly.</p>
+          <div class="panel-header form-panel__header">
+            <div>
+              <p class="section-kicker">Application callback</p>
+              <h2>Callback Details</h2>
+            </div>
+            <p>Fields marked with an asterisk are required.</p>
           </div>
 
-          <div class="field-grid">
-            <label class="field">
-              <span>Full Name</span>
-              <input name="fullName" type="text" placeholder="Enter full name" required />
-            </label>
-
-            <label class="field">
-              <span>Phone Number</span>
-              <input name="phoneNumber" type="tel" placeholder="+971..." required />
-            </label>
-
-            <label class="field">
-              <span>Location</span>
-              <input name="location" type="text" placeholder="City / area" required />
-            </label>
-
-            <label class="field">
-              <span>Desired Position</span>
-              <select name="desiredPosition" required>
-                <option value="">Select position</option>
-                <option>Household Worker</option>
-                <option>Babysitter</option>
-                <option>House Cook</option>
-                <option>Lady Driver</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Desired Country</span>
-              <select name="desiredCountry" required>
-                <option value="">Select country</option>
-                <option>UAE Dubai</option>
-                <option>Qatar</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Passport Status</span>
-              <select name="passportStatus" required>
-                <option value="">Select status</option>
-                <option>Available</option>
-                <option>Not Available</option>
-                <option>In Process</option>
-                <option>Expired</option>
-              </select>
-            </label>
-
-            <label class="field field--full">
-              <span>Schedule for Call or Visit to Office</span>
-              <input
-                name="schedule"
-                type="datetime-local"
-                required
-              />
-            </label>
-
-            <fieldset class="field field--full choice-group">
-              <legend>Preferred Follow-Up Type</legend>
-              <label class="choice">
-                <input type="radio" name="followUpType" value="Call" required />
-                <span>Call</span>
+          <div class="form-section">
+            <h3>Your details</h3>
+            <div class="field-grid">
+              <label class="field">
+                <span>Full Name <em>*</em></span>
+                <input name="fullName" type="text" placeholder="Enter full name" required />
               </label>
-              <label class="choice">
-                <input type="radio" name="followUpType" value="Visit Office" />
-                <span>Visit Office</span>
-              </label>
-              <label class="choice">
-                <input type="radio" name="followUpType" value="Either" />
-                <span>Either</span>
-              </label>
-            </fieldset>
 
-            <label class="field field--full">
-              <span>Notes</span>
-              <textarea
-                name="notes"
-                rows="4"
-                placeholder="Add any extra details here"
-              ></textarea>
-            </label>
+              <label class="field">
+                <span>Phone Number <em>*</em></span>
+                <input name="phoneNumber" type="tel" placeholder="+971..." required />
+              </label>
+
+              <label class="field">
+                <span>Location <em>*</em></span>
+                <input name="location" type="text" placeholder="City / area" required />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Job details</h3>
+            <div class="field-grid">
+              <label class="field">
+                <span>Desired Position <em>*</em></span>
+                <select name="desiredPosition" required>
+                  <option value="">Select position</option>
+                  <option>Household Worker</option>
+                  <option>Babysitter</option>
+                  <option>House Cook</option>
+                  <option>Lady Driver</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Desired Country <em>*</em></span>
+                <select name="desiredCountry" required>
+                  <option value="">Select country</option>
+                  <option>UAE Dubai</option>
+                  <option>Qatar</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Passport Status <em>*</em></span>
+                <select name="passportStatus" required>
+                  <option value="">Select status</option>
+                  <option>Available</option>
+                  <option>Not Available</option>
+                  <option>In Process</option>
+                  <option>Expired</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Follow-up preference</h3>
+            <div class="field-grid">
+              <label class="field field--full">
+                <span>Schedule for Call or Visit to Office <em>*</em></span>
+                <input
+                  name="schedule"
+                  type="datetime-local"
+                  required
+                />
+              </label>
+
+              <fieldset class="field field--full choice-group">
+                <legend>Preferred Follow-Up Type <em>*</em></legend>
+                <label class="choice">
+                  <input type="radio" name="followUpType" value="Call" required />
+                  <span>Call</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="followUpType" value="Visit Office" />
+                  <span>Visit Office</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="followUpType" value="Either" />
+                  <span>Either</span>
+                </label>
+              </fieldset>
+
+              <label class="field field--full">
+                <span>Notes</span>
+                <textarea
+                  name="notes"
+                  rows="4"
+                  placeholder="Add any extra details here"
+                ></textarea>
+              </label>
+            </div>
           </div>
 
           <div class="actions">
-            <button type="submit" class="primary-btn">Sign Up Follow-Up</button>
-            <button type="button" id="clearBtn" class="secondary-btn">Clear Form</button>
-            <a class="sms-btn" href="sms:+639266406364">Message SMS</a>
+            <button type="submit" class="primary-btn">Submit</button>
+            <button type="button" id="clearBtn" class="secondary-btn">Clear form</button>
+            <a class="sms-btn" href="sms:+639266406364">Open SMS</a>
           </div>
 
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
@@ -176,7 +167,10 @@
 
         <aside class="panel list-panel">
           <div class="panel-header">
-            <h2>Saved Leads</h2>
+            <div>
+              <p class="section-kicker">Responses</p>
+              <h2>Saved Leads</h2>
+            </div>
             <p>Stored locally in this browser for quick review.</p>
           </div>
 

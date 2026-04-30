@@ -131,7 +131,7 @@ form.addEventListener("submit", async (event) => {
 
   const submitBtn = form.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.textContent = "Saving...";
+  submitBtn.textContent = "Submitting...";
 
   try {
     const formData = new FormData(form);
@@ -153,16 +153,16 @@ form.addEventListener("submit", async (event) => {
     renderLeads();
 
     if (syncResult.synced) {
-      setStatus("Lead saved and sent to Google Sheets.", "success");
+      setStatus("Your response has been recorded and sent to Google Sheets.", "success");
     } else {
-      setStatus("Lead saved locally. Google Sheets endpoint is not configured.", "success");
+      setStatus("Your response has been recorded locally. Google Sheets endpoint is not configured.", "success");
     }
   } catch (error) {
     console.error(error);
-    setStatus("Could not save the lead right now. Please try again.", "error");
+    setStatus("Could not record your response right now. Please try again.", "error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Save Lead";
+    submitBtn.textContent = "Submit";
   }
 });
 
