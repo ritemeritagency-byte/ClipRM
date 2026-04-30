@@ -132,8 +132,16 @@
               </label>
 
               <label class="field field--full">
-                <span>Time <em>*</em></span>
-                <input name="time" type="time" required />
+                <span>Time (24-hour) <em>*</em></span>
+                <input
+                  name="time"
+                  type="text"
+                  inputmode="numeric"
+                  placeholder="HH:MM"
+                  pattern="([01]\\d|2[0-3]):[0-5]\\d"
+                  title="Use 24-hour time format, like 14:30"
+                  required
+                />
               </label>
             </div>
           </div>
