@@ -22,6 +22,9 @@ function asText(value) {
 function doPost(e) {
   try {
     const payload = parsePayload(e);
+    if (isEmptyPayload(payload)) {
+      return jsonResponse({ ok: false, error: "Empty payload" });
+    }
     const sheet = getOrCreateSheet();
 
     sheet.appendRow([
@@ -54,6 +57,16 @@ function doPost(e) {
       500,
     );
   }
+}
+
+function isEmptyPayload(payload) {
+  return !(
+    asText(payload.workerName || payload.fullName || "") ||
+    asText(payload.phoneNumber || "") ||
+    asText(payload.purpose || "") ||
+    asText(payload.date || "") ||
+    asText(payload.time || "")
+  );
 }
 
 function parsePayload(e) {
