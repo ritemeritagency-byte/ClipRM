@@ -1,8 +1,7 @@
 const form = document.getElementById("leadForm");
 const statusEl = document.getElementById("formStatus");
-const successModal = document.getElementById("successModal");
-const closeSuccessButtons = document.querySelectorAll("[data-close-success]");
 let successModalTimer = null;
+let successModal = null;
 
 const googleSheetsEndpoint =
   document.querySelector('meta[name="google-sheets-web-app-url"]')?.content?.trim() ||
@@ -77,18 +76,52 @@ function resetStatus() {
   setStatus("");
 }
 
+function ensureSuccessModal() {
+  if (successModal) return successModal;
+
+  const modal = document.createElement("div");
+  modal.id = "successModal";
+  modal.className = "success-modal";
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden", "true");
+  modal.innerHTML = `
+    <div class="success-modal__backdrop" data-close-success></div>
+    <div class="success-modal__panel panel" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <div class="success-card__icon">✓</div>
+      <p class="section-kicker">Submission complete</p>
+      <h2 id="successTitle">Thanks. Your details are in.</h2>
+      <p>The representative will call you within 1 hour or at the time you selected.</p>
+      <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
+      <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  successModal = modal;
+
+  modal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-success]")) {
+      hideSuccessModal();
+    }
+  });
+
+  return successModal;
+}
+
 function showSuccessModal() {
+  const modal = ensureSuccessModal();
   if (successModalTimer) {
     clearTimeout(successModalTimer);
     successModalTimer = null;
   }
-  successModal.hidden = false;
-  successModal.setAttribute("aria-hidden", "false");
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
   successModalTimer = window.setTimeout(hideSuccessModal, 4500);
 }
 
 function hideSuccessModal() {
+  if (!successModal) return;
   if (successModalTimer) {
     clearTimeout(successModalTimer);
     successModalTimer = null;
@@ -139,15 +172,4 @@ if (!googleSheetsEndpoint) {
   console.warn("Google Sheets sync is not configured yet.");
 }
 
-closeSuccessButtons.forEach((button) => {
-  button.addEventListener("click", hideSuccessModal);
-});
-
-successModal.addEventListener("click", (event) => {
-  if (event.target.closest("[data-close-success]")) {
-    hideSuccessModal();
-  }
-});
-
-hideSuccessModal();
 window.addEventListener("pageshow", hideSuccessModal);
