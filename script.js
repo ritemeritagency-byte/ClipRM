@@ -99,10 +99,8 @@ function ensureSuccessModal() {
   document.body.appendChild(modal);
   successModal = modal;
 
-  modal.addEventListener("click", (event) => {
-    if (event.target.closest("[data-close-success]")) {
-      hideSuccessModal();
-    }
+  modal.querySelectorAll("[data-close-success]").forEach((element) => {
+    element.addEventListener("click", hideSuccessModal);
   });
 
   return successModal;
@@ -117,6 +115,7 @@ function showSuccessModal() {
   modal.hidden = false;
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  modal.querySelector("[data-close-success]")?.focus();
   successModalTimer = window.setTimeout(hideSuccessModal, 4500);
 }
 

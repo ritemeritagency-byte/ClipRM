@@ -15,6 +15,10 @@ const HEADER_ROW = [
   "Agent",
 ];
 
+function asText(value) {
+  return String(value ?? "").trim();
+}
+
 function doPost(e) {
   try {
     const payload = parsePayload(e);
@@ -22,18 +26,23 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
-      payload.workerName || payload.fullName || "",
-      payload.phoneNumber || "",
-      payload.purpose || "",
-      payload.date || "",
-      payload.time || "",
-      payload.location || "",
-      payload.age || "",
-      payload.passportStatus || "",
-      payload.desiredCountry || "",
-      payload.desiredPosition || "",
-      payload.representativeName || payload.agent || "",
+      asText(payload.workerName || payload.fullName || ""),
+      "",
+      asText(payload.purpose || ""),
+      asText(payload.date || ""),
+      asText(payload.time || ""),
+      asText(payload.location || ""),
+      asText(payload.age || ""),
+      asText(payload.passportStatus || ""),
+      asText(payload.desiredCountry || ""),
+      asText(payload.desiredPosition || ""),
+      asText(payload.representativeName || payload.agent || ""),
     ]);
+
+    const row = sheet.getLastRow();
+    const phoneCell = sheet.getRange(row, 3);
+    phoneCell.setNumberFormat("@");
+    phoneCell.setValue(asText(payload.phoneNumber || ""));
 
     return jsonResponse({ ok: true });
   } catch (error) {
