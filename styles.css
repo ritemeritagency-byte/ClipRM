@@ -29,6 +29,7 @@ body {
     radial-gradient(circle at top right, rgba(34, 197, 94, 0.16), transparent 26%),
     linear-gradient(135deg, #020617 0%, var(--bg) 48%, #081226 100%);
   color: var(--text);
+  overflow-x: hidden;
 }
 
 .app-shell {
@@ -437,22 +438,102 @@ textarea {
     padding: 20px 0 36px;
   }
 
+  .agency-banner {
+    padding: 18px;
+    gap: 16px;
+  }
+
   .hero-copy,
   .hero-card,
   .panel {
     border-radius: 22px;
-    padding: 20px;
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.35rem, 7vw, 1.8rem);
+  }
+
+  .subtitle {
+    margin-top: 14px;
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  .banner-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .photo-card--wide {
+    grid-row: auto;
+  }
+
+  .photo-card img {
+    height: 120px;
+  }
+
+  .photo-card figcaption {
+    padding: 10px;
+    font-size: 0.78rem;
   }
 
   .field-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 18px;
   }
 
   .actions {
     flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
   }
 
   .actions > * {
     width: 100%;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .sms-btn {
+    padding: 15px 16px;
+  }
+
+  .choice-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .choice-group legend {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .choice {
+    flex: 1 1 calc(50% - 10px);
+    margin-right: 0;
+    justify-content: center;
+    padding: 12px 10px;
+  }
+
+  .lead-item__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lead-item {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .sheet-note {
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 }
