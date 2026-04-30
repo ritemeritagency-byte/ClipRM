@@ -32,7 +32,7 @@ function doPost(e) {
       payload.passportStatus || "",
       payload.desiredCountry || "",
       payload.desiredPosition || "",
-      payload.agent || payload.representativeName || "",
+      payload.representativeName || payload.agent || "",
     ]);
 
     return jsonResponse({ ok: true });

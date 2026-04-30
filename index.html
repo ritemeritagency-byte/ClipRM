@@ -46,6 +46,7 @@
         <form id="leadForm" class="panel form-panel">
           <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
           <input type="hidden" name="agent" value="Clip" />
+          <input type="hidden" name="representativeName" value="Clip" />
           <input type="hidden" name="purpose" value="Missed call follow-up" />
           <div class="panel-header form-panel__header">
             <div>
@@ -138,6 +139,18 @@
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
           <p class="sheet-note">A representative will contact you within 1 hour or at the time you selected.</p>
         </form>
+
+        <div id="successCard" class="panel success-card" hidden>
+          <div class="success-card__icon">✓</div>
+          <p class="section-kicker">Submission complete</p>
+          <h2>Thanks. Your details are in.</h2>
+          <p>
+            The representative will call you within 1 hour or at the time you selected.
+          </p>
+          <p class="success-card__meta">
+            If you need to update anything, please contact the agency directly.
+          </p>
+        </div>
       </section>
     </main>
 

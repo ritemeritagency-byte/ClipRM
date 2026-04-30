@@ -208,6 +208,40 @@ h2 {
   gap: 24px;
 }
 
+.success-card {
+  align-self: start;
+  display: grid;
+  gap: 14px;
+  padding: 32px;
+}
+
+.success-card__icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.success-card h2 {
+  margin: 0;
+}
+
+.success-card p {
+  margin: 0;
+  color: #3c4043;
+  line-height: 1.6;
+}
+
+.success-card__meta {
+  color: #5f6368;
+  font-size: 0.92rem;
+}
+
 .panel {
   border-radius: 28px;
   padding: 28px;
@@ -850,5 +884,9 @@ textarea:focus {
 
   .actions > * {
     width: 100%;
+  }
+
+  .success-card {
+    padding: 24px;
   }
 }

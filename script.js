@@ -1,5 +1,6 @@
 const form = document.getElementById("leadForm");
 const statusEl = document.getElementById("formStatus");
+const successCard = document.getElementById("successCard");
 
 const googleSheetsEndpoint =
   document.querySelector('meta[name="google-sheets-web-app-url"]')?.content?.trim() ||
@@ -20,7 +21,8 @@ function normalizeLead(rawLead) {
   const time = clean(rawLead.time);
   return {
     agencyName: clean(rawLead.agencyName) || "Rite Merit International Recruitment Agency",
-    agent: clean(rawLead.agent) || "Clip",
+    agent: clean(rawLead.agent) || clean(rawLead.representativeName) || "Clip",
+    representativeName: clean(rawLead.representativeName) || clean(rawLead.agent) || "Clip",
     purpose: clean(rawLead.purpose) || "Missed call follow-up",
     workerName: clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),
@@ -73,6 +75,11 @@ function resetStatus() {
   setStatus("");
 }
 
+function showSuccessCard() {
+  form.hidden = true;
+  successCard.hidden = false;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   resetStatus();
@@ -96,9 +103,9 @@ form.addEventListener("submit", async (event) => {
     form.reset();
 
     if (syncResult.synced) {
-      setStatus("Thanks. The representative will call you within 1 hour or at your selected time.", "success");
+      showSuccessCard();
     } else {
-      setStatus("Thanks. The representative will call you within 1 hour or at your selected time.", "success");
+      showSuccessCard();
       console.warn("Google Sheets endpoint is not configured.");
     }
   } catch (error) {
