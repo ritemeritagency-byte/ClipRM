@@ -2,6 +2,7 @@ const form = document.getElementById("leadForm");
 const statusEl = document.getElementById("formStatus");
 const successModal = document.getElementById("successModal");
 const closeSuccessButtons = document.querySelectorAll("[data-close-success]");
+let successModalTimer = null;
 
 const googleSheetsEndpoint =
   document.querySelector('meta[name="google-sheets-web-app-url"]')?.content?.trim() ||
@@ -77,12 +78,21 @@ function resetStatus() {
 }
 
 function showSuccessModal() {
+  if (successModalTimer) {
+    clearTimeout(successModalTimer);
+    successModalTimer = null;
+  }
   successModal.hidden = false;
   successModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  successModalTimer = window.setTimeout(hideSuccessModal, 4500);
 }
 
 function hideSuccessModal() {
+  if (successModalTimer) {
+    clearTimeout(successModalTimer);
+    successModalTimer = null;
+  }
   successModal.hidden = true;
   successModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
