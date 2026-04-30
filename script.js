@@ -129,6 +129,10 @@ function hideSuccessModal() {
   successModal.hidden = true;
   successModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  window.requestAnimationFrame(() => {
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    form.querySelector("input, select, textarea, button")?.focus();
+  });
 }
 
 form.addEventListener("submit", async (event) => {
