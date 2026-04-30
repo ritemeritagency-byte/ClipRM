@@ -46,6 +46,7 @@ function validateLead(lead) {
   if (!lead.phoneNumber) errors.push("Phone Number is required.");
   if (!lead.age) errors.push("Age is required.");
   if (!lead.location) errors.push("Location is required.");
+  if (!lead.purpose) errors.push("Purpose is required.");
   if (!lead.desiredPosition) errors.push("Desired Position is required.");
   if (!lead.desiredCountry) errors.push("Desired Country is required.");
   if (!lead.passportStatus) errors.push("Passport Status is required.");

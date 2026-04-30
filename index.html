@@ -44,7 +44,6 @@
           <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
           <input type="hidden" name="agent" value="Clip" />
           <input type="hidden" name="representativeName" value="Clip" />
-          <input type="hidden" name="purpose" value="Missed call follow-up" />
           <div class="panel-header form-panel__header">
             <div>
               <p class="section-kicker">Application callback</p>
@@ -117,6 +116,16 @@
           <div class="form-section">
             <h3>Follow-up preference</h3>
             <div class="field-grid">
+              <label class="field field--full">
+                <span>Purpose <em>*</em></span>
+                <select name="purpose" required>
+                  <option value="">Select purpose</option>
+                  <option>Visit Office</option>
+                  <option>Call Again</option>
+                  <option>Schedule Call</option>
+                </select>
+              </label>
+
               <label class="field field--full">
                 <span>Date <em>*</em></span>
                 <input name="date" type="date" required />
