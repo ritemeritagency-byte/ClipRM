@@ -130,8 +130,11 @@ function hideSuccessModal() {
   successModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
   window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     form.scrollIntoView({ behavior: "smooth", block: "start" });
-    form.querySelector("input, select, textarea, button")?.focus();
+    window.setTimeout(() => {
+      form.querySelector("input, select, textarea, button")?.focus();
+    }, 150);
   });
 }
 
