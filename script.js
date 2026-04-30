@@ -1,5 +1,4 @@
 const form = document.getElementById("leadForm");
-const clearBtn = document.getElementById("clearBtn");
 const statusEl = document.getElementById("formStatus");
 
 const googleSheetsEndpoint =
@@ -91,9 +90,9 @@ form.addEventListener("submit", async (event) => {
     form.reset();
 
     if (syncResult.synced) {
-      setStatus("Thanks. Your details have been submitted successfully.", "success");
+      setStatus("Thanks. The representative will call you within 1 hour or at your selected time.", "success");
     } else {
-      setStatus("Thanks. Our representative will contact you shortly.", "success");
+      setStatus("Thanks. The representative will call you within 1 hour or at your selected time.", "success");
       console.warn("Google Sheets endpoint is not configured.");
     }
   } catch (error) {
@@ -103,11 +102,6 @@ form.addEventListener("submit", async (event) => {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit";
   }
-});
-
-clearBtn.addEventListener("click", () => {
-  form.reset();
-  resetStatus();
 });
 
 if (!googleSheetsEndpoint) {
