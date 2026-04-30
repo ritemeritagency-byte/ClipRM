@@ -26,11 +26,12 @@
       <header class="form-hero panel">
         <div class="form-hero__copy">
           <p class="eyebrow">Rite Merit International Recruitment Agency</p>
-          <h1>Missed the call?</h1>
+          <h1>Missed your appointment?</h1>
           <p class="subtitle">
-            At Rite Merit Agency, your future abroad is in safe hands. Your
-            application is still with us, so fill out the form below and our
-            representative will call you within 1 hour or at the time you choose.
+            If you missed a call or your office appointment, fill out the form
+            below so we can help you continue your application. Choose whether
+            you want to visit the office again, get a call back, or schedule a
+            new time.
           </p>
         </div>
 
@@ -47,9 +48,24 @@
           <div class="panel-header form-panel__header">
             <div>
               <p class="section-kicker">Application callback</p>
-              <h2>Callback Details</h2>
+              <h2>Appointment Recovery Details</h2>
             </div>
             <p>Fields marked with an asterisk are required.</p>
+          </div>
+
+          <div class="form-section">
+            <h3>What do you need?</h3>
+            <div class="field-grid">
+              <label class="field field--full">
+                <span>Purpose <em>*</em></span>
+                <select name="purpose" required>
+                  <option value="">Select purpose</option>
+                  <option>Visit Office</option>
+                  <option>Call Again</option>
+                  <option>Schedule Call</option>
+                </select>
+              </label>
+            </div>
           </div>
 
           <div class="form-section">
@@ -115,16 +131,6 @@
           <div class="form-section">
             <h3>Follow-up preference</h3>
             <div class="field-grid">
-              <label class="field field--full">
-                <span>Purpose <em>*</em></span>
-                <select name="purpose" required>
-                  <option value="">Select purpose</option>
-                  <option>Visit Office</option>
-                  <option>Call Again</option>
-                  <option>Schedule Call</option>
-                </select>
-              </label>
-
               <label class="field field--full">
                 <span>Date <em>*</em></span>
                 <input name="date" type="date" required />

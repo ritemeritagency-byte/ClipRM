@@ -24,7 +24,7 @@ function normalizeLead(rawLead) {
     agencyName: clean(rawLead.agencyName) || "Rite Merit International Recruitment Agency",
     agent: clean(rawLead.agent) || clean(rawLead.representativeName) || "Clip",
     representativeName: clean(rawLead.representativeName) || clean(rawLead.agent) || "Clip",
-    purpose: clean(rawLead.purpose) || "Missed call follow-up",
+    purpose: clean(rawLead.purpose),
     workerName: clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),
     age: clean(rawLead.age),
