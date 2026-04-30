@@ -19,6 +19,27 @@ function asText(value) {
   return String(value ?? "").trim();
 }
 
+function formatTimeDisplay(value) {
+  const text = asText(value);
+  if (!text) return "";
+
+  const match = text.match(/^(\d{1,2}):(\d{2})(?:\s*([AaPp][Mm]))?$/);
+  if (!match) return text;
+
+  let hours = Number(match[1]);
+  const minutes = match[2];
+  let meridiem = (match[3] || "").toUpperCase();
+
+  if (!meridiem) {
+    meridiem = hours >= 12 ? "PM" : "AM";
+  }
+
+  hours %= 12;
+  if (hours === 0) hours = 12;
+
+  return `${String(hours).padStart(2, "0")}:${minutes} ${meridiem}`;
+}
+
 function doPost(e) {
   try {
     const payload = parsePayload(e);
@@ -33,7 +54,7 @@ function doPost(e) {
       "",
       asText(payload.purpose || ""),
       asText(payload.date || ""),
-      asText(payload.time || ""),
+      formatTimeDisplay(payload.time || ""),
       asText(payload.location || ""),
       asText(payload.age || ""),
       asText(payload.passportStatus || ""),
