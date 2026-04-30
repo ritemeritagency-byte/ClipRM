@@ -16,17 +16,21 @@ function clean(value) {
 }
 
 function normalizeLead(rawLead) {
+  const date = clean(rawLead.date);
+  const time = clean(rawLead.time);
   return {
     agencyName: clean(rawLead.agencyName) || "Rite Merit International Recruitment Agency",
-    representativeName: clean(rawLead.representativeName) || "Clip",
-    fullName: clean(rawLead.fullName),
+    agent: clean(rawLead.agent) || "Clip",
+    purpose: clean(rawLead.purpose) || "Missed call follow-up",
+    workerName: clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),
+    age: clean(rawLead.age),
+    date,
+    time,
     location: clean(rawLead.location),
     desiredPosition: clean(rawLead.desiredPosition),
     desiredCountry: clean(rawLead.desiredCountry),
     passportStatus: clean(rawLead.passportStatus),
-    schedule: clean(rawLead.schedule),
-    notes: clean(rawLead.notes),
     createdAt: new Date().toISOString(),
     source: "website-form",
   };
@@ -35,13 +39,15 @@ function normalizeLead(rawLead) {
 function validateLead(lead) {
   const errors = [];
 
-  if (!lead.fullName) errors.push("Full Name is required.");
+  if (!lead.workerName) errors.push("Worker Name is required.");
   if (!lead.phoneNumber) errors.push("Phone Number is required.");
+  if (!lead.age) errors.push("Age is required.");
   if (!lead.location) errors.push("Location is required.");
   if (!lead.desiredPosition) errors.push("Desired Position is required.");
   if (!lead.desiredCountry) errors.push("Desired Country is required.");
   if (!lead.passportStatus) errors.push("Passport Status is required.");
-  if (!lead.schedule) errors.push("Schedule for Call or Visit to Office is required.");
+  if (!lead.date) errors.push("Date is required.");
+  if (!lead.time) errors.push("Time is required.");
 
   return errors;
 }

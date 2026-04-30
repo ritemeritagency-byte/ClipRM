@@ -9,7 +9,10 @@
       content="A quick callback form for applicants who missed the representative's call."
     />
     <meta name="theme-color" content="#673ab7" />
-    <meta name="google-sheets-web-app-url" content="" />
+    <meta
+      name="google-sheets-web-app-url"
+      content="https://script.google.com/macros/s/AKfycbyNeefY2QgnU_T4RZubnm_ap84PKywRRYCOaiPKAT_YwkeQKq5OHkS7flU87ulra7Y2/exec"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -42,7 +45,8 @@
       <section class="form-grid">
         <form id="leadForm" class="panel form-panel">
           <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
-          <input type="hidden" name="representativeName" value="Clip" />
+          <input type="hidden" name="agent" value="Clip" />
+          <input type="hidden" name="purpose" value="Missed call follow-up" />
           <div class="panel-header form-panel__header">
             <div>
               <p class="section-kicker">Application callback</p>
@@ -55,13 +59,18 @@
             <h3>Your details</h3>
             <div class="field-grid">
               <label class="field">
-                <span>Full Name <em>*</em></span>
-                <input name="fullName" type="text" placeholder="Enter full name" required />
+                <span>Worker Name <em>*</em></span>
+                <input name="workerName" type="text" placeholder="Enter worker name" required />
               </label>
 
               <label class="field">
                 <span>Phone Number <em>*</em></span>
                 <input name="phoneNumber" type="tel" placeholder="+971..." required />
+              </label>
+
+              <label class="field">
+                <span>Age <em>*</em></span>
+                <input name="age" type="number" min="18" max="80" placeholder="Age" required />
               </label>
 
               <label class="field">
@@ -111,37 +120,13 @@
             <h3>Follow-up preference</h3>
             <div class="field-grid">
               <label class="field field--full">
-                <span>Preferred call or office time <em>*</em></span>
-                <input
-                  name="schedule"
-                  type="datetime-local"
-                  required
-                />
+                <span>Date <em>*</em></span>
+                <input name="date" type="date" required />
               </label>
 
-              <fieldset class="field field--full choice-group">
-                <legend>How should we follow up? <em>*</em></legend>
-                <label class="choice">
-                  <input type="radio" name="followUpType" value="Call" required />
-                  <span>Call</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="followUpType" value="Visit Office" />
-                  <span>Visit Office</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="followUpType" value="Either" />
-                  <span>Either</span>
-                </label>
-              </fieldset>
-
               <label class="field field--full">
-                <span>Notes</span>
-                <textarea
-                  name="notes"
-                  rows="4"
-                  placeholder="Add any extra details here"
-                ></textarea>
+                <span>Time <em>*</em></span>
+                <input name="time" type="time" required />
               </label>
             </div>
           </div>

@@ -1,17 +1,18 @@
-const SHEET_NAME = "Leads";
+const SPREADSHEET_ID = "116oDzuFsqnakjbEJaT4RjRrthWuwE-RS3yNG4-wbccs";
+const SHEET_NAME = "CallSched";
 const HEADER_ROW = [
   "Timestamp",
-  "Agency Name",
-  "Representative Name",
-  "Full Name",
+  "Worker Name",
   "Phone Number",
+  "Porpuse",
+  "Date",
+  "Time",
   "Location",
-  "Desired Position",
-  "Desired Country",
+  "Age",
   "Passport Status",
-  "Schedule",
-  "Notes",
-  "Source",
+  "Desired Country",
+  "Desired Position",
+  "Agent",
 ];
 
 function doPost(e) {
@@ -21,17 +22,17 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
-      payload.agencyName || "",
-      payload.representativeName || "",
-      payload.fullName || "",
+      payload.workerName || payload.fullName || "",
       payload.phoneNumber || "",
+      payload.purpose || "",
+      payload.date || "",
+      payload.time || "",
       payload.location || "",
-      payload.desiredPosition || "",
-      payload.desiredCountry || "",
+      payload.age || "",
       payload.passportStatus || "",
-      payload.schedule || "",
-      payload.notes || "",
-      payload.source || "website-form",
+      payload.desiredCountry || "",
+      payload.desiredPosition || "",
+      payload.agent || payload.representativeName || "",
     ]);
 
     return jsonResponse({ ok: true });
@@ -67,20 +68,22 @@ function parsePayload(e) {
 }
 
 function getOrCreateSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   let sheet = ss.getSheetByName(SHEET_NAME);
 
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.getRange(1, 1, 1, HEADER_ROW.length).setValues([HEADER_ROW]);
-    sheet.setFrozenRows(1);
-    return sheet;
   }
 
-  if (sheet.getLastRow() === 0) {
-    sheet.getRange(1, 1, 1, HEADER_ROW.length).setValues([HEADER_ROW]);
-    sheet.setFrozenRows(1);
+  const headerRange = sheet.getRange(1, 1, 1, HEADER_ROW.length);
+  const currentHeaders = headerRange.getValues()[0];
+  const hasMatchingHeaders = HEADER_ROW.every((header, index) => currentHeaders[index] === header);
+
+  if (!hasMatchingHeaders) {
+    headerRange.setValues([HEADER_ROW]);
   }
+
+  sheet.setFrozenRows(1);
 
   return sheet;
 }
