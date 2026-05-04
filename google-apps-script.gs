@@ -46,6 +46,19 @@ function formatTimeDisplay(value) {
   return `${String(hours).padStart(2, "0")}:${minutes} ${meridiem}`;
 }
 
+function normalizePurpose(value) {
+  switch (asText(value)) {
+    case "Receive Call":
+      return "Receive a Call from a Rite Merit Representative";
+    case "Visit to Office":
+      return "Visit the Office";
+    case "Schedule Call":
+      return "Schedule a Follow-Up Call";
+    default:
+      return asText(value);
+  }
+}
+
 function doPost(e) {
   try {
     const payload = parsePayload(e);
@@ -61,7 +74,7 @@ function doPost(e) {
       asText(payload.representativeName || ""),
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
-      asText(payload.purpose || ""),
+      normalizePurpose(payload.purpose || ""),
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
       asText(payload.location || ""),
@@ -91,7 +104,7 @@ function isEmptyPayload(payload) {
   return !(
     asText(payload.fullName || payload.workerName || "") ||
     asText(payload.phoneNumber || "") ||
-    asText(payload.purpose || "") ||
+    normalizePurpose(payload.purpose || "") ||
     asText(payload.date || "") ||
     asText(payload.time || "")
   );
