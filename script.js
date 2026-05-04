@@ -561,11 +561,16 @@ async function copyOfficeAddress() {
 function downloadGeneratedMessage() {
   if (!lastGeneratedMessage) return;
 
+  const referenceCode = clean(lastConfirmationCode) || "RM-XXXXXX-XXXX";
   const blob = new Blob(
     [
-      `Reference Code: ${lastConfirmationCode}`,
+      "APPOINTMENT CONFIRMATION",
+      "",
+      `Reference Code: ${referenceCode}`,
       "",
       lastGeneratedMessage,
+      "",
+      "OFFICE DETAILS",
       "",
       buildOfficeCardText(),
     ],
@@ -574,7 +579,7 @@ function downloadGeneratedMessage() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${lastConfirmationCode || "appointment-confirmation"}.txt`;
+  link.download = `${referenceCode}.txt`;
   document.body.appendChild(link);
   link.click();
   link.remove();
