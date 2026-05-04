@@ -71,6 +71,9 @@ function doPost(e) {
     if (isEmptyPayload(payload)) {
       return jsonResponse({ ok: false, error: "Empty payload" });
     }
+    if (!asText(payload.emailAddress || "")) {
+      return jsonResponse({ ok: false, error: "Email Address is required." });
+    }
     const sheet = getOrCreateSheet();
 
     sheet.appendRow([
@@ -103,7 +106,10 @@ function doPost(e) {
     try {
       sendConfirmationEmail(payload);
     } catch (emailError) {
-      // Keep the booking flow successful even if email delivery fails.
+      return jsonResponse({
+        ok: false,
+        error: `Booking saved, but email sending failed: ${emailError.message || "Unknown email error"}`,
+      });
     }
 
     return jsonResponse({ ok: true });

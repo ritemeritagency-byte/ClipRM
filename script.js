@@ -507,6 +507,7 @@ function validateLead(lead) {
 
   if (!lead.fullName) errors.push("Full Name is required.");
   if (!lead.phoneNumber) errors.push("Phone Number is required.");
+  if (!lead.emailAddress) errors.push("Email Address is required.");
   if (lead.emailAddress && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.emailAddress)) {
     errors.push("Email Address is not valid.");
   }
