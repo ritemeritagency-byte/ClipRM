@@ -62,6 +62,11 @@ function formatGpsCoordinate(value) {
 function shareCurrentLocation() {
   if (isSharingLocation) return;
 
+  if (!window.isSecureContext) {
+    setLocationStatus("Location sharing needs a secure browser context.", "error");
+    return;
+  }
+
   if (!navigator.geolocation) {
     setLocationStatus("Your browser does not support location sharing.", "error");
     return;
@@ -70,6 +75,7 @@ function shareCurrentLocation() {
   isSharingLocation = true;
   if (shareLocationBtn) {
     shareLocationBtn.disabled = true;
+    shareLocationBtn.dataset.state = "sharing";
     shareLocationBtn.textContent = "Sharing location...";
   }
   setLocationStatus("Waiting for location permission...", "");
@@ -100,6 +106,7 @@ function shareCurrentLocation() {
       isSharingLocation = false;
       if (shareLocationBtn) {
         shareLocationBtn.disabled = false;
+        delete shareLocationBtn.dataset.state;
         shareLocationBtn.textContent = "Share current location";
       }
     },
@@ -119,6 +126,7 @@ function shareCurrentLocation() {
       isSharingLocation = false;
       if (shareLocationBtn) {
         shareLocationBtn.disabled = false;
+        delete shareLocationBtn.dataset.state;
         shareLocationBtn.textContent = "Share current location";
       }
     },
@@ -896,6 +904,7 @@ form.addEventListener("reset", () => {
   setLocationStatus("Location not shared yet.");
   if (shareLocationBtn) {
     shareLocationBtn.disabled = false;
+    delete shareLocationBtn.dataset.state;
     shareLocationBtn.textContent = "Share current location";
   }
   isSharingLocation = false;
