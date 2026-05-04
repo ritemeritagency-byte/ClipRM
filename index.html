@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Missed Call Follow-Up Form</title>
+    <title>Appointment Setter Form</title>
     <meta
       name="description"
-      content="A quick callback form for applicants who missed the representative's call."
+      content="Book an appointment with Rite Merit International Recruitment Agency."
     />
     <meta name="theme-color" content="#673ab7" />
     <meta
@@ -26,12 +26,11 @@
       <header class="form-hero panel">
         <div class="form-hero__copy">
           <p class="eyebrow">Rite Merit International Recruitment Agency</p>
-          <h1>Missed your appointment?</h1>
+          <h1>Book your appointment.</h1>
           <p class="subtitle">
-            If you missed a call or your office appointment, fill out the form
-            below so we can help you continue your application. Choose whether
-            you want to visit the office again, get a call back, or schedule a
-            new time.
+            Use this form to set a visit, phone call, or follow-up appointment.
+            Share the details we need and we’ll help confirm the best schedule
+            for your application.
           </p>
         </div>
 
@@ -47,22 +46,22 @@
           <input type="hidden" name="representativeName" value="Clip" />
           <div class="panel-header form-panel__header">
             <div>
-              <p class="section-kicker">Application callback</p>
-              <h2>Appointment Recovery Details</h2>
+              <p class="section-kicker">Appointment setter</p>
+              <h2>Appointment Details</h2>
             </div>
             <p>Fields marked with an asterisk are required.</p>
           </div>
 
           <div class="form-section">
-            <h3>What do you need?</h3>
+            <h3>Appointment type</h3>
             <div class="field-grid">
               <label class="field field--full">
                 <span>Purpose <em>*</em></span>
                 <select name="purpose" required>
-                  <option value="">Select purpose</option>
+                  <option value="">Select appointment type</option>
                   <option>Visit Office</option>
-                  <option>Call Me Again</option>
-                  <option>Schedule Call</option>
+                  <option>Call Me Back</option>
+                  <option>Schedule Follow-up</option>
                 </select>
               </label>
             </div>
@@ -72,8 +71,8 @@
             <h3>Your details</h3>
             <div class="field-grid">
               <label class="field">
-                <span>Worker Name <em>*</em></span>
-                <input name="workerName" type="text" placeholder="Enter worker name" required />
+                <span>Full Name <em>*</em></span>
+                <input name="fullName" type="text" placeholder="Enter full name" required />
               </label>
 
               <label class="field">
@@ -89,6 +88,14 @@
               <label class="field">
                 <span>Location <em>*</em></span>
                 <input name="location" type="text" placeholder="City / area" required />
+              </label>
+
+              <label class="field field--full">
+                <span>Appointment Notes</span>
+                <textarea
+                  name="notes"
+                  placeholder="Add any special request, question, or preferred time window"
+                ></textarea>
               </label>
             </div>
           </div>
@@ -158,7 +165,7 @@
           </div>
 
           <div class="actions">
-            <button type="submit" class="primary-btn">Submit</button>
+            <button type="submit" class="primary-btn">Book appointment</button>
           </div>
 
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>

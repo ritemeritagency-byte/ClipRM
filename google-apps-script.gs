@@ -2,9 +2,9 @@ const SPREADSHEET_ID = "116oDzuFsqnakjbEJaT4RjRrthWuwE-RS3yNG4-wbccs";
 const SHEET_NAME = "CallSched";
 const HEADER_ROW = [
   "Timestamp",
-  "Worker Name",
+  "Full Name",
   "Phone Number",
-  "Porpuse",
+  "Purpose",
   "Date",
   "Time",
   "Location",
@@ -12,6 +12,7 @@ const HEADER_ROW = [
   "Passport Status",
   "Desired Country",
   "Desired Position",
+  "Notes",
   "Agent",
 ];
 
@@ -50,7 +51,7 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
-      asText(payload.workerName || payload.fullName || ""),
+      asText(payload.fullName || payload.workerName || ""),
       "",
       asText(payload.purpose || ""),
       asText(payload.date || ""),
@@ -60,6 +61,7 @@ function doPost(e) {
       asText(payload.passportStatus || ""),
       asText(payload.desiredCountry || ""),
       asText(payload.desiredPosition || ""),
+      asText(payload.notes || ""),
       asText(payload.representativeName || payload.agent || ""),
     ]);
 
@@ -82,7 +84,7 @@ function doPost(e) {
 
 function isEmptyPayload(payload) {
   return !(
-    asText(payload.workerName || payload.fullName || "") ||
+    asText(payload.fullName || payload.workerName || "") ||
     asText(payload.phoneNumber || "") ||
     asText(payload.purpose || "") ||
     asText(payload.date || "") ||

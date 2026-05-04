@@ -1,6 +1,6 @@
-# Lead Callback Form
+# Appointment Setter Form
 
-Use this form to collect leads who want to apply abroad in:
+Use this form to collect appointment requests for applicants who want to apply abroad in:
 - UAE, Dubai
 - Qatar
 
@@ -12,7 +12,7 @@ Target roles:
 
 ## Form Purpose
 
-This form is for calling leads back or scheduling a visit to the office.
+This form is for booking office visits, callback appointments, or follow-up schedules.
 
 ## Required Fields
 
@@ -22,22 +22,25 @@ This form is for calling leads back or scheduling a visit to the office.
 - Desired Position
 - Desired Country
 - Passport Status
-- Schedule for Call or Visit to Office
+- Appointment Type
+- Date
+- Time
+- Notes
 
 ## Simple Lead Flow
 
 ```text
-Lead received
+Appointment request received
   -> Collect form details
-  -> Call back or schedule office visit
-  -> Qualify the lead
-  -> Follow up until placed
+  -> Confirm appointment time
+  -> Qualify the applicant
+  -> Follow up until booked
 ```
 
 ## Copy-Paste Form Template
 
 ```text
-LEAD CALLBACK FORM
+APPOINTMENT SETTER FORM
 
 Full Name:
 Phone Number:
@@ -45,7 +48,10 @@ Location:
 Desired Position:
 Desired Country:
 Passport Status:
-Schedule for Call or Visit to Office:
+Appointment Type:
+Date:
+Time:
+Notes:
 
 Notes:
 ```

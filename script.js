@@ -8,6 +8,8 @@ const googleSheetsEndpoint =
   window.GOOGLE_SHEETS_WEB_APP_URL ||
   "";
 
+const dateField = form.querySelector('input[name="date"]');
+
 function setStatus(message, state = "") {
   statusEl.textContent = message;
   statusEl.dataset.state = state;
@@ -25,7 +27,7 @@ function normalizeLead(rawLead) {
     agent: clean(rawLead.agent) || clean(rawLead.representativeName) || "Clip",
     representativeName: clean(rawLead.representativeName) || clean(rawLead.agent) || "Clip",
     purpose: clean(rawLead.purpose),
-    workerName: clean(rawLead.workerName),
+    fullName: clean(rawLead.fullName) || clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),
     age: clean(rawLead.age),
     date,
@@ -34,6 +36,7 @@ function normalizeLead(rawLead) {
     desiredPosition: clean(rawLead.desiredPosition),
     desiredCountry: clean(rawLead.desiredCountry),
     passportStatus: clean(rawLead.passportStatus),
+    notes: clean(rawLead.notes),
     createdAt: new Date().toISOString(),
     source: "website-form",
   };
@@ -42,7 +45,7 @@ function normalizeLead(rawLead) {
 function validateLead(lead) {
   const errors = [];
 
-  if (!lead.workerName) errors.push("Worker Name is required.");
+  if (!lead.fullName) errors.push("Full Name is required.");
   if (!lead.phoneNumber) errors.push("Phone Number is required.");
   if (!lead.age) errors.push("Age is required.");
   if (!lead.location) errors.push("Location is required.");
@@ -54,6 +57,15 @@ function validateLead(lead) {
   if (!lead.time) errors.push("Time is required.");
 
   return errors;
+}
+
+function setDateMinimum() {
+  if (!dateField) return;
+
+  const today = new Date();
+  const offset = today.getTimezoneOffset() * 60000;
+  const localIsoDate = new Date(today.getTime() - offset).toISOString().split("T")[0];
+  dateField.min = localIsoDate;
 }
 
 async function syncLeadToGoogleSheets(lead) {
@@ -89,9 +101,9 @@ function ensureSuccessModal() {
     <div class="success-modal__backdrop" data-close-success></div>
     <div class="success-modal__panel panel" role="dialog" aria-modal="true" aria-labelledby="successTitle">
       <div class="success-card__icon">✓</div>
-      <p class="section-kicker">Submission complete</p>
-      <h2 id="successTitle">Thanks. Your details are in.</h2>
-      <p>The representative will call you within 1 hour or at the time you selected.</p>
+      <p class="section-kicker">Appointment booked</p>
+      <h2 id="successTitle">Thanks. We received your appointment request.</h2>
+      <p>The representative will review your details and confirm the best schedule.</p>
       <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
       <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
     </div>
@@ -179,4 +191,5 @@ if (!googleSheetsEndpoint) {
   console.warn("Google Sheets sync is not configured yet.");
 }
 
+setDateMinimum();
 window.addEventListener("pageshow", hideSuccessModal);
