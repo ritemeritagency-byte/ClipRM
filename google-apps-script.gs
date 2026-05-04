@@ -1,5 +1,5 @@
 const SPREADSHEET_ID = "116oDzuFsqnakjbEJaT4RjRrthWuwE-RS3yNG4-wbccs";
-const SHEET_NAME = "CallSched";
+const SHEET_NAME = "Schedule";
 const HEADER_ROW = [
   "Timestamp",
   "Agency Name",
