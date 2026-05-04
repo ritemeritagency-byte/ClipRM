@@ -408,6 +408,7 @@ function normalizeLead(rawLead) {
     date,
     time,
     location: clean(rawLead.location),
+    emailAddress: clean(rawLead.emailAddress),
     desiredPosition: clean(rawLead.desiredPosition),
     desiredCountry: clean(rawLead.desiredCountry),
     passportStatus: clean(rawLead.passportStatus),
@@ -428,6 +429,9 @@ function validateLead(lead) {
 
   if (!lead.fullName) errors.push("Full Name is required.");
   if (!lead.phoneNumber) errors.push("Phone Number is required.");
+  if (lead.emailAddress && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.emailAddress)) {
+    errors.push("Email Address is not valid.");
+  }
   if (!lead.age) errors.push("Age is required.");
   if (!lead.location) errors.push("Location is required.");
   if (!lead.purpose) errors.push("Purpose is required.");

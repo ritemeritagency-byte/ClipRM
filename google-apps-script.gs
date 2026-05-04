@@ -7,6 +7,7 @@ const HEADER_ROW = [
   "Representative Name",
   "Full Name",
   "Phone Number",
+  "Email Address",
   "Purpose",
   "Date",
   "Time",
@@ -79,6 +80,7 @@ function doPost(e) {
       asText(payload.representativeName || ""),
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
+      asText(payload.emailAddress || ""),
       normalizePurpose(payload.purpose || ""),
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
@@ -97,6 +99,12 @@ function doPost(e) {
       asText(payload.createdAt || ""),
       asText(payload.source || ""),
     ]);
+
+    try {
+      sendConfirmationEmail(payload);
+    } catch (emailError) {
+      // Keep the booking flow successful even if email delivery fails.
+    }
 
     return jsonResponse({ ok: true });
   } catch (error) {
@@ -159,6 +167,50 @@ function getOrCreateSheet() {
   sheet.setFrozenRows(1);
 
   return sheet;
+}
+
+function sendConfirmationEmail(payload) {
+  const emailAddress = asText(payload.emailAddress || "");
+  if (!emailAddress) return;
+
+  const fullName = asText(payload.fullName || payload.workerName || "Worker Name");
+  const dateText = asText(payload.date || "");
+  const timeText = formatTimeDisplay(payload.time || "");
+  const confirmationCode = asText(payload.confirmationCode || "");
+  const purpose = normalizePurpose(payload.purpose || "Appointment");
+  const position = asText(payload.desiredPosition || "");
+  const country = asText(payload.desiredCountry || "");
+  const mapsLink = asText(payload.gpsMapsLink || "");
+
+  const body = [
+    `Hi ${fullName},`,
+    "",
+    "Your Rite Merit appointment has been confirmed.",
+    "",
+    `Reference Code: ${confirmationCode}`,
+    `Purpose: ${purpose}`,
+    `Date: ${dateText}`,
+    `Time: ${timeText}`,
+    `Position: ${position}`,
+    `Country: ${country}`,
+    "",
+    "Office address:",
+    "1570 A. Mabini St, Ermita, Manila, 4th Floor Gedisco Center Room D",
+    "Office hours: 10:00 AM to 5:00 PM",
+    "Contact: +63 926 640 6364",
+    "DMW License: 288-LB-03062024-R",
+  ];
+
+  if (mapsLink) {
+    body.push("", `Google Maps: ${mapsLink}`);
+  }
+
+  MailApp.sendEmail({
+    to: emailAddress,
+    subject: `Rite Merit Appointment Confirmation - ${confirmationCode || "RM Appointment"}`,
+    body: body.join("\n"),
+    name: "Rite Merit International Manpower Corporation",
+  });
 }
 
 function jsonResponse(data, status) {
