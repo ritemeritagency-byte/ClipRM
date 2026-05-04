@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#673ab7" />
     <meta
       name="google-sheets-web-app-url"
-      content="https://script.google.com/macros/s/AKfycbx5texp9zR1tsEwc9bXPylvjhywvYR26RqhTReTy-h5Khvug3z9u7uq-03i27wCRwwv/exec"
+      content="https://script.google.com/macros/s/AKfycbym7ibH6snDy5C_tRYjOLMUCZvQqrV59NjmRvk_P2Oa7z6iwpfE2_4em3hxZHQeebVR/exec"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -47,13 +47,31 @@
           <div class="panel-header form-panel__header">
             <div>
               <p class="section-kicker">Appointment setter</p>
-              <h2>Appointment Details</h2>
+              <h2>Booking information</h2>
             </div>
             <p>Fields marked with an asterisk are required.</p>
           </div>
 
+          <div class="form-summary" aria-label="Form highlights">
+            <div class="form-summary__item">
+              <span>Reference code</span>
+              <strong>Generated instantly</strong>
+            </div>
+            <div class="form-summary__item">
+              <span>Visit options</span>
+              <strong>Call, office, or follow-up</strong>
+            </div>
+            <div class="form-summary__item">
+              <span>Location sharing</span>
+              <strong>Optional and consent-based</strong>
+            </div>
+          </div>
+
           <div class="form-section">
             <h3>How would you like to connect?</h3>
+            <p class="form-section__note">
+              Choose the option that best matches the applicant's preferred next step.
+            </p>
             <div class="field-grid">
               <label class="field field--full">
                 <span>Purpose <em>*</em></span>
@@ -69,6 +87,9 @@
 
           <div class="form-section">
             <h3>Your details</h3>
+            <p class="form-section__note">
+              We use these details to prepare the confirmation pass and the office schedule.
+            </p>
             <div class="field-grid">
               <label class="field">
                 <span>Full Name <em>*</em></span>
@@ -114,6 +135,9 @@
 
           <div class="form-section">
             <h3>Job details</h3>
+            <p class="form-section__note">
+              These fields help the representative quickly identify the applicant's profile.
+            </p>
             <div class="field-grid">
               <label class="field">
                 <span>Desired Position <em>*</em></span>
@@ -149,6 +173,9 @@
 
           <div class="form-section">
             <h3>Follow-up preference</h3>
+            <p class="form-section__note">
+              Select the date and time the applicant should report or receive a callback.
+            </p>
             <div class="field-grid">
               <label class="field field--full">
                 <span>Date to Report / Visit Date <em>*</em></span>
