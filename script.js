@@ -365,8 +365,7 @@ function normalizeLead(rawLead) {
   const time = clean(rawLead.time);
   return {
     agencyName: clean(rawLead.agencyName) || "Rite Merit International Recruitment Agency",
-    agent: clean(rawLead.agent) || clean(rawLead.representativeName) || "Clip",
-    representativeName: clean(rawLead.representativeName) || clean(rawLead.agent) || "Clip",
+    representativeName: clean(rawLead.representativeName) || "Clip",
     purpose: clean(rawLead.purpose),
     fullName: clean(rawLead.fullName) || clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),

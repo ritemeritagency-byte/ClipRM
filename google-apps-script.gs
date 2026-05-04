@@ -3,7 +3,6 @@ const SHEET_NAME = "Schedule";
 const HEADER_ROW = [
   "Timestamp",
   "Agency Name",
-  "Agent",
   "Representative Name",
   "Full Name",
   "Phone Number",
@@ -73,7 +72,6 @@ function doPost(e) {
     sheet.appendRow([
       new Date(),
       asText(payload.agencyName || ""),
-      asText(payload.agent || ""),
       asText(payload.representativeName || ""),
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
