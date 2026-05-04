@@ -71,11 +71,11 @@ function formatDateText(value) {
 
 function getPurposePhrase(purpose) {
   switch (clean(purpose)) {
-    case "Receive Call":
+    case "Receive a Call from a Rite Merit Representative":
       return "call with a Rite Merit representative";
-    case "Visit to Office":
+    case "Visit the Office":
       return "office visit";
-    case "Schedule Call":
+    case "Schedule a Follow-Up Call":
       return "scheduled call";
     default:
       return "appointment";

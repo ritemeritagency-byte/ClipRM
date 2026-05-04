@@ -15,9 +15,9 @@ Target roles:
 This form is for booking appointments and helping applicants connect with Rite Merit.
 
 It can be used for:
-- Receive Call
-- Visit to Office
-- Schedule Call
+- Receive a Call from a Rite Merit Representative
+- Visit the Office
+- Schedule a Follow-Up Call
 - Learning more about available job opportunities
 
 ## Required Fields
