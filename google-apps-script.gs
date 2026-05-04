@@ -8,6 +8,8 @@ const HEADER_ROW = [
   "Full Name",
   "Phone Number",
   "Email Address",
+  "Email Status",
+  "Email Error",
   "Purpose",
   "Date",
   "Time",
@@ -75,6 +77,7 @@ function doPost(e) {
       return jsonResponse({ ok: false, error: "Email Address is required." });
     }
     const sheet = getOrCreateSheet();
+    const emailResult = sendConfirmationEmail(payload);
 
     sheet.appendRow([
       new Date(),
@@ -84,6 +87,8 @@ function doPost(e) {
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
       asText(payload.emailAddress || ""),
+      emailResult.sent ? "sent" : "failed",
+      emailResult.error || "",
       normalizePurpose(payload.purpose || ""),
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
@@ -103,16 +108,7 @@ function doPost(e) {
       asText(payload.source || ""),
     ]);
 
-    try {
-      sendConfirmationEmail(payload);
-    } catch (emailError) {
-      return jsonResponse({
-        ok: false,
-        error: `Booking saved, but email sending failed: ${emailError.message || "Unknown email error"}`,
-      });
-    }
-
-    return jsonResponse({ ok: true });
+    return jsonResponse({ ok: true, emailSent: emailResult.sent, emailError: emailResult.error || "" });
   } catch (error) {
     return jsonResponse(
       {
@@ -177,7 +173,9 @@ function getOrCreateSheet() {
 
 function sendConfirmationEmail(payload) {
   const emailAddress = asText(payload.emailAddress || "");
-  if (!emailAddress) return;
+  if (!emailAddress) {
+    return { sent: false, error: "Email Address is required." };
+  }
 
   const fullName = asText(payload.fullName || payload.workerName || "Worker Name");
   const dateText = asText(payload.date || "");
@@ -209,12 +207,20 @@ function sendConfirmationEmail(payload) {
     `Google Maps: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("1570 A. Mabini St, Ermita, Manila, 4th Floor Gedisco Center Room D")}`,
   ];
 
-  MailApp.sendEmail({
-    to: emailAddress,
-    subject: `Rite Merit Appointment Confirmation - ${confirmationCode || "RM Appointment"}`,
-    body: body.join("\n"),
-    name: "Rite Merit International Manpower Corporation",
-  });
+  try {
+    MailApp.sendEmail({
+      to: emailAddress,
+      subject: `Rite Merit Appointment Confirmation - ${confirmationCode || "RM Appointment"}`,
+      body: body.join("\n"),
+      name: "Rite Merit International Manpower Corporation",
+    });
+    return { sent: true, error: "" };
+  } catch (error) {
+    return {
+      sent: false,
+      error: error && error.message ? error.message : "Unknown email error",
+    };
+  }
 }
 
 function jsonResponse(data, status) {
