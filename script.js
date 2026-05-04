@@ -13,6 +13,8 @@ const officeAddress =
 const officeHours = "10:00 AM to 5:00 PM";
 const officeContact = "+63 926 640 6364";
 const dmwLicense = "288-LB-03062024-R";
+const officeMapUrl = `https://www.google.com/maps?q=${encodeURIComponent(officeAddress)}&output=embed`;
+const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddress)}`;
 
 const dateField = form.querySelector('input[name="date"]');
 let lastGeneratedMessage = "";
@@ -110,6 +112,104 @@ function buildAppointmentMessage(lead) {
   ].join("\n");
 }
 
+function buildOfficeCardText() {
+  return [
+    "Rite Merit International Manpower Corporation",
+    `Office address: ${officeAddress}`,
+    `Office hours: ${officeHours}`,
+    `Contact: ${officeContact}`,
+    `DMW License: ${dmwLicense}`,
+    `Google Maps: ${officeDirectionsUrl}`,
+  ].join("\n");
+}
+
+function buildAppointmentPassText(lead) {
+  const dateText = formatDateText(lead.date) || "your selected date";
+  const timeText = clean(lead.time) || "your selected time";
+
+  return [
+    "APPOINTMENT PASS",
+    `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
+    `Name: ${clean(lead.fullName) || "Worker Name"}`,
+    `Purpose: ${clean(lead.purpose) || "Appointment"}`,
+    `Date: ${dateText}`,
+    `Time: ${timeText}`,
+    `Position: ${clean(lead.desiredPosition) || "N/A"}`,
+    `Country: ${clean(lead.desiredCountry) || "N/A"}`,
+    `Office: ${officeAddress}`,
+    `Hours: ${officeHours}`,
+    `Contact: ${officeContact}`,
+  ].join("\n");
+}
+
+function escapeXml(value) {
+  return clean(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+function buildAppointmentPassSvg(lead) {
+  const lines = [
+    "APPOINTMENT PASS",
+    `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
+    `Name: ${clean(lead.fullName) || "Worker Name"}`,
+    `Purpose: ${clean(lead.purpose) || "Appointment"}`,
+    `Date: ${formatDateText(lead.date) || "your selected date"}`,
+    `Time: ${clean(lead.time) || "your selected time"}`,
+    `Position: ${clean(lead.desiredPosition) || "N/A"}`,
+    `Country: ${clean(lead.desiredCountry) || "N/A"}`,
+    `Office: ${officeAddress}`,
+    `Hours: ${officeHours}`,
+    `Contact: ${officeContact}`,
+  ];
+
+  const textNodes = lines
+    .map(
+      (line, index) => `
+        <text x="72" y="${260 + index * 52}" class="pass-line">${escapeXml(line)}</text>
+      `,
+    )
+    .join("");
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1620" viewBox="0 0 1080 1620">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#081226" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#38bdf8" />
+          <stop offset="100%" stop-color="#22c55e" />
+        </linearGradient>
+        <style>
+          .title { font: 800 54px 'Manrope', Arial, sans-serif; fill: #f8fafc; letter-spacing: 3px; }
+          .sub { font: 600 26px 'Manrope', Arial, sans-serif; fill: #cbd5e1; }
+          .badge { font: 800 22px 'Manrope', Arial, sans-serif; fill: #081226; letter-spacing: 2px; }
+          .pass-line { font: 600 34px 'Manrope', Arial, sans-serif; fill: #f8fafc; }
+          .small { font: 600 24px 'Manrope', Arial, sans-serif; fill: #cbd5e1; }
+        </style>
+      </defs>
+      <rect width="1080" height="1620" rx="48" fill="url(#bg)" />
+      <rect x="48" y="48" width="984" height="1524" rx="40" fill="rgba(15,23,42,0.9)" stroke="rgba(148,163,184,0.25)" />
+      <rect x="48" y="48" width="984" height="18" rx="9" fill="url(#accent)" />
+      <text x="72" y="160" class="sub">Rite Merit International Manpower Corporation</text>
+      <text x="72" y="230" class="title">APPOINTMENT PASS</text>
+      <rect x="72" y="1340" width="936" height="150" rx="26" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.35)" />
+      <text x="96" y="1392" class="small">Office address</text>
+      <text x="96" y="1440" class="pass-line" style="font-size: 30px;">${escapeXml(officeAddress)}</text>
+      <text x="96" y="1494" class="small">Hours: ${escapeXml(officeHours)} | Contact: ${escapeXml(officeContact)}</text>
+      ${textNodes}
+      <text x="72" y="1250" class="small">DMW License: ${escapeXml(dmwLicense)}</text>
+      <rect x="72" y="1270" width="936" height="2" fill="rgba(148,163,184,0.18)" />
+      <text x="72" y="1330" class="small">Show this pass at the office together with your reference code.</text>
+    </svg>
+  `.trim();
+}
+
 function normalizeLead(rawLead) {
   const date = clean(rawLead.date);
   const time = clean(rawLead.time);
@@ -197,15 +297,45 @@ function ensureSuccessModal() {
       <h2 id="successTitle">Thanks. We received your appointment request.</h2>
       <p class="success-card__code-label">Reference code</p>
       <p class="success-card__code" id="generatedCode"></p>
+      <div class="success-card__pass" id="generatedPass"></div>
       <p>The representative will review your details and confirm the best schedule.</p>
       <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
       <div class="success-card__message-wrap">
         <p class="success-card__label">Ready-to-send message</p>
         <pre class="success-card__message" id="generatedMessage"></pre>
       </div>
+      <div class="success-card__office">
+        <div class="success-card__office-map">
+          <iframe
+            title="Rite Merit office location"
+            src="${officeMapUrl}"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <div class="success-card__office-body">
+          <p class="success-card__label">Office location</p>
+          <p class="success-card__office-title">Rite Merit International Manpower Corporation</p>
+          <p class="success-card__office-text">${officeAddress}</p>
+          <p class="success-card__office-text">Hours: ${officeHours}</p>
+          <p class="success-card__office-text">Contact: ${officeContact}</p>
+        </div>
+      </div>
+      <div class="success-card__pass-shell">
+        <div class="success-card__pass-head">
+          <span>Appointment pass</span>
+          <strong id="generatedCodeInline"></strong>
+        </div>
+        <div class="success-card__pass" id="generatedPass"></div>
+      </div>
       <div class="success-modal__actions">
         <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy message</button>
         <button type="button" class="secondary-btn success-modal__button" data-copy-code>Copy code</button>
+        <a class="secondary-btn success-modal__button success-modal__link" href="${officeDirectionsUrl}" target="_blank" rel="noreferrer">Open map</a>
+        <button type="button" class="secondary-btn success-modal__button" data-copy-address>Copy address</button>
+        <button type="button" class="secondary-btn success-modal__button" data-print-pass>Print / Save pass</button>
+        <button type="button" class="secondary-btn success-modal__button" data-share-pass>Share pass</button>
+        <button type="button" class="secondary-btn success-modal__button" data-download-pass>Save pass image</button>
         <button type="button" class="secondary-btn success-modal__button" data-download-message>Download</button>
         <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
       </div>
@@ -221,6 +351,10 @@ function ensureSuccessModal() {
 
   modal.querySelector("[data-copy-message]")?.addEventListener("click", copyGeneratedMessage);
   modal.querySelector("[data-copy-code]")?.addEventListener("click", copyConfirmationCode);
+  modal.querySelector("[data-copy-address]")?.addEventListener("click", copyOfficeAddress);
+  modal.querySelector("[data-print-pass]")?.addEventListener("click", printAppointmentPass);
+  modal.querySelector("[data-share-pass]")?.addEventListener("click", shareAppointmentPass);
+  modal.querySelector("[data-download-pass]")?.addEventListener("click", downloadAppointmentPass);
   modal.querySelector("[data-download-message]")?.addEventListener("click", downloadGeneratedMessage);
 
   return successModal;
@@ -250,11 +384,27 @@ async function copyConfirmationCode() {
   }
 }
 
+async function copyOfficeAddress() {
+  try {
+    await navigator.clipboard.writeText(buildOfficeCardText());
+    setStatus("Office details copied to clipboard.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not copy the office details automatically.", "error");
+  }
+}
+
 function downloadGeneratedMessage() {
   if (!lastGeneratedMessage) return;
 
   const blob = new Blob(
-    [`Reference Code: ${lastConfirmationCode}`, "", lastGeneratedMessage],
+    [
+      `Reference Code: ${lastConfirmationCode}`,
+      "",
+      lastGeneratedMessage,
+      "",
+      buildOfficeCardText(),
+    ],
     { type: "text/plain;charset=utf-8" },
   );
   const url = URL.createObjectURL(blob);
@@ -267,10 +417,90 @@ function downloadGeneratedMessage() {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+function printAppointmentPass() {
+  window.print();
+}
+
+async function shareAppointmentPass() {
+  if (!lastConfirmationCode) return;
+
+  const text = `${buildAppointmentPassText({
+    confirmationCode: lastConfirmationCode,
+    fullName: form.querySelector('input[name="fullName"]')?.value,
+    purpose: form.querySelector('select[name="purpose"]')?.value,
+    date: form.querySelector('input[name="date"]')?.value,
+    time: form.querySelector('select[name="time"]')?.value,
+    desiredPosition: form.querySelector('select[name="desiredPosition"]')?.value,
+    desiredCountry: form.querySelector('select[name="desiredCountry"]')?.value,
+  })}`;
+
+  try {
+    if (navigator.share) {
+      const file = await buildAppointmentPassFile();
+      if (file && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: "Appointment Pass",
+          text,
+          files: [file],
+        });
+        return;
+      }
+
+      await navigator.share({
+        title: "Appointment Pass",
+        text,
+      });
+      return;
+    }
+
+    await downloadAppointmentPass();
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not open the share sheet.", "error");
+  }
+}
+
+async function buildAppointmentPassFile() {
+  const lead = {
+    confirmationCode: lastConfirmationCode,
+    fullName: form.querySelector('input[name="fullName"]')?.value,
+    purpose: form.querySelector('select[name="purpose"]')?.value,
+    date: form.querySelector('input[name="date"]')?.value,
+    time: form.querySelector('select[name="time"]')?.value,
+    desiredPosition: form.querySelector('select[name="desiredPosition"]')?.value,
+    desiredCountry: form.querySelector('select[name="desiredCountry"]')?.value,
+  };
+
+  const blob = new Blob([buildAppointmentPassSvg(lead)], { type: "image/svg+xml;charset=utf-8" });
+  return new File([blob], `${lastConfirmationCode || "appointment-pass"}.svg`, {
+    type: "image/svg+xml",
+  });
+}
+
+async function downloadAppointmentPass() {
+  try {
+    const file = await buildAppointmentPassFile();
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus("Appointment pass image saved.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not save the pass image.", "error");
+  }
+}
+
 function showSuccessModal(lead) {
   const modal = ensureSuccessModal();
   const messageEl = modal.querySelector("#generatedMessage");
   const codeEl = modal.querySelector("#generatedCode");
+  const codeInlineEl = modal.querySelector("#generatedCodeInline");
+  const passEl = modal.querySelector("#generatedPass");
   lastConfirmationCode = lead.confirmationCode || generateConfirmationCode();
   lastGeneratedMessage = buildAppointmentMessage(lead);
   if (messageEl) {
@@ -278,6 +508,22 @@ function showSuccessModal(lead) {
   }
   if (codeEl) {
     codeEl.textContent = lastConfirmationCode;
+  }
+  if (codeInlineEl) {
+    codeInlineEl.textContent = lastConfirmationCode;
+  }
+  if (passEl) {
+    passEl.innerHTML = `
+      <div class="success-card__pass-grid">
+        <div><span>Name</span><strong>${clean(lead.fullName)}</strong></div>
+        <div><span>Date</span><strong>${formatDateText(lead.date)}</strong></div>
+        <div><span>Time</span><strong>${clean(lead.time)}</strong></div>
+        <div><span>Purpose</span><strong>${clean(lead.purpose)}</strong></div>
+        <div><span>Position</span><strong>${clean(lead.desiredPosition)}</strong></div>
+        <div><span>Country</span><strong>${clean(lead.desiredCountry)}</strong></div>
+        <div class="success-card__pass-full"><span>Show at office</span><strong>${officeAddress}</strong></div>
+      </div>
+    `;
   }
   if (successModalTimer) {
     clearTimeout(successModalTimer);

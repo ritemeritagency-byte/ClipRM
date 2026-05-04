@@ -286,6 +286,121 @@ h2 {
   text-align: left;
 }
 
+.success-card__office {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 14px;
+  margin-top: 4px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.6);
+  text-align: left;
+}
+
+.success-card__office-map {
+  min-height: 220px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(2, 6, 23, 0.4);
+}
+
+.success-card__office-map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: 0;
+}
+
+.success-card__office-body {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.success-card__office-title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.success-card__office-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.success-card__pass-shell {
+  margin-top: 4px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(34, 197, 94, 0.12)),
+    rgba(15, 23, 42, 0.6);
+  text-align: left;
+}
+
+.success-card__pass-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.success-card__pass-head span {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--accent-2);
+  text-transform: uppercase;
+}
+
+.success-card__pass-head strong {
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.success-card__pass-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.success-card__pass-grid div,
+.success-card__pass-full {
+  display: grid;
+  gap: 6px;
+}
+
+.success-card__pass-grid span,
+.success-card__pass-full span {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.success-card__pass-grid strong,
+.success-card__pass-full strong {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.success-card__pass-full {
+  grid-column: 1 / -1;
+}
+
 .success-card__label {
   margin: 0 0 10px;
   color: var(--accent-2);
@@ -331,6 +446,13 @@ h2 {
 
 .success-modal__button {
   min-width: 140px;
+}
+
+.success-modal__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .panel {
@@ -667,9 +789,82 @@ textarea {
     border-radius: 18px;
   }
 
+  .success-card__office,
+  .success-card__pass-shell {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .success-card__office {
+    grid-template-columns: 1fr;
+  }
+
+  .success-card__office-map,
+  .success-card__office-map iframe {
+    min-height: 180px;
+  }
+
+  .success-card__pass-grid {
+    grid-template-columns: 1fr;
+  }
+
   .sheet-note {
     font-size: 0.82rem;
     line-height: 1.5;
+  }
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #successModal,
+  #successModal * {
+    visibility: visible !important;
+  }
+
+  #successModal {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .success-modal__backdrop,
+  .success-modal__actions,
+  .success-card__message-wrap,
+  .success-card__office-map {
+    display: none !important;
+  }
+
+  .success-modal__panel {
+    width: 100% !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    color: #000 !important;
+    text-align: left !important;
+  }
+
+  .success-card__code,
+  .success-card__code-label,
+  .success-card__label,
+  .success-card__office-text,
+  .success-card__office-title,
+  .success-card__pass-shell,
+  .success-card__pass-head span,
+  .success-card__pass-head strong,
+  .success-card__pass-grid span,
+  .success-card__pass-grid strong,
+  .success-card__pass-full span,
+  .success-card__pass-full strong {
+    color: #000 !important;
   }
 }
 
