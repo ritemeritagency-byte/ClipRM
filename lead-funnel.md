@@ -12,7 +12,14 @@ Target roles:
 
 ## Form Purpose
 
-This form is for booking office visits, callback appointments, or follow-up schedules.
+This form is for booking appointments and helping applicants connect with Rite Merit.
+
+It can be used for:
+- Booking an appointment
+- Receiving a call from a Rite Merit representative
+- Scheduling a follow-up call
+- Visiting the office
+- Learning more about available job opportunities
 
 ## Required Fields
 
