@@ -244,6 +244,74 @@ function buildOfficeCardText() {
   ].join("\n");
 }
 
+function buildOfficeCardSvg(logoDataUrl = "") {
+  const logoBlock = logoDataUrl
+    ? `
+      <rect x="72" y="72" width="160" height="160" rx="32" fill="#ffffff" opacity="0.08" />
+      <image
+        x="86"
+        y="86"
+        width="132"
+        height="132"
+        href="${logoDataUrl}"
+        preserveAspectRatio="xMidYMid meet"
+      />
+    `
+    : `
+      <rect x="72" y="72" width="160" height="160" rx="32" fill="url(#accent)" opacity="0.18" />
+      <text x="108" y="160" class="badge">RM</text>
+    `;
+
+  const content = [
+    "OFFICE ADDRESS",
+    "Rite Merit International Manpower Corporation",
+    officeAddress,
+    `Hours: ${officeHours}`,
+    `Contact: ${officeContact}`,
+    `DMW License: ${dmwLicense}`,
+    "Google Maps link is included in your confirmation email.",
+  ];
+
+  const textNodes = content
+    .map(
+      (line, index) => `
+        <text x="72" y="${300 + index * 92}" class="${index === 0 ? "title" : index === 1 ? "sub strong" : "pass-line"}">${escapeXml(line)}</text>
+      `,
+    )
+    .join("");
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1500" viewBox="0 0 1080 1500">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#081226" />
+          <stop offset="100%" stop-color="#0f172a" />
+        </linearGradient>
+        <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#38bdf8" />
+          <stop offset="100%" stop-color="#22c55e" />
+        </linearGradient>
+        <style>
+          .title { font: 800 54px 'Manrope', Arial, sans-serif; fill: #f8fafc; letter-spacing: 3px; }
+          .sub { font: 600 28px 'Manrope', Arial, sans-serif; fill: #cbd5e1; }
+          .strong { font: 800 32px 'Manrope', Arial, sans-serif; fill: #f8fafc; letter-spacing: 0.4px; }
+          .badge { font: 800 22px 'Manrope', Arial, sans-serif; fill: #081226; letter-spacing: 2px; }
+          .pass-line { font: 600 30px 'Manrope', Arial, sans-serif; fill: #f8fafc; }
+        </style>
+      </defs>
+      <rect width="1080" height="1500" rx="48" fill="url(#bg)" />
+      <rect x="48" y="48" width="984" height="1404" rx="40" fill="rgba(15,23,42,0.9)" stroke="rgba(148,163,184,0.25)" />
+      <rect x="48" y="48" width="984" height="18" rx="9" fill="url(#accent)" />
+      ${logoBlock}
+      <text x="72" y="164" class="sub">Official office details for your visit</text>
+      ${textNodes}
+      <rect x="72" y="1228" width="936" height="148" rx="28" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.35)" />
+      <text x="96" y="1280" class="sub">Save this card and show it at the office</text>
+      <text x="96" y="1332" class="pass-line" style="font-size: 28px;">Included in your confirmation email too</text>
+    </svg>
+  `.trim();
+}
+
 function buildAppointmentPassText(lead) {
   const dateText = formatDateText(lead.date) || "your selected date";
   const timeText = clean(lead.time) || "your selected time";
@@ -268,6 +336,16 @@ function buildAppointmentPassText(lead) {
   }
 
   return lines.join("\n");
+}
+
+async function buildOfficeCardFile() {
+  const logoDataUrl = await getOfficeLogoDataUrl();
+  const blob = new Blob([buildOfficeCardSvg(logoDataUrl)], {
+    type: "image/svg+xml;charset=utf-8",
+  });
+  return new File([blob], `office-address-${formatDateCode(new Date())}.svg`, {
+    type: "image/svg+xml",
+  });
 }
 
 function getOfficeLogoDataUrl() {
@@ -498,7 +576,7 @@ function ensureSuccessModal() {
         <div class="success-card__pass" id="generatedPass"></div>
       </div>
       <p>The representative will review your details and confirm the best schedule.</p>
-      <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
+      <p class="success-card__meta">If you provided an email address, we also sent the office address and map link there.</p>
       <div class="success-card__message-wrap">
         <p class="success-card__label">Ready-to-send message</p>
         <pre class="success-card__message" id="generatedMessage"></pre>
@@ -526,6 +604,7 @@ function ensureSuccessModal() {
           <div class="success-modal__button-grid">
             <button type="button" class="primary-btn success-modal__button" data-share-pass>Share pass</button>
             <button type="button" class="secondary-btn success-modal__button" data-download-pass>Save pass image</button>
+            <button type="button" class="secondary-btn success-modal__button" data-download-office-card>Download address image</button>
             <a class="secondary-btn success-modal__button success-modal__link" href="${officeDirectionsUrl}" target="_blank" rel="noreferrer">Open map</a>
             <button type="button" class="secondary-btn success-modal__button" data-print-pass>Print / PDF</button>
           </div>
@@ -557,6 +636,7 @@ function ensureSuccessModal() {
   modal.querySelector("[data-print-pass]")?.addEventListener("click", printAppointmentPass);
   modal.querySelector("[data-share-pass]")?.addEventListener("click", shareAppointmentPass);
   modal.querySelector("[data-download-pass]")?.addEventListener("click", downloadAppointmentPass);
+  modal.querySelector("[data-download-office-card]")?.addEventListener("click", downloadOfficeCard);
   modal.querySelector("[data-download-message]")?.addEventListener("click", downloadGeneratedMessage);
 
   return successModal;
@@ -684,6 +764,25 @@ async function downloadAppointmentPass() {
   } catch (error) {
     console.error(error);
     setStatus("We could not save the pass image.", "error");
+  }
+}
+
+async function downloadOfficeCard() {
+  try {
+    const file = await buildOfficeCardFile();
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus("Office address image saved.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not save the office address image.", "error");
   }
 }
 

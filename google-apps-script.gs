@@ -186,6 +186,7 @@ function sendConfirmationEmail(payload) {
     `Hi ${fullName},`,
     "",
     "Your Rite Merit appointment has been confirmed.",
+    "We have also included the office address below for easy reference.",
     "",
     `Reference Code: ${confirmationCode}`,
     `Purpose: ${purpose}`,
@@ -199,11 +200,8 @@ function sendConfirmationEmail(payload) {
     "Office hours: 10:00 AM to 5:00 PM",
     "Contact: +63 926 640 6364",
     "DMW License: 288-LB-03062024-R",
+    `Google Maps: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("1570 A. Mabini St, Ermita, Manila, 4th Floor Gedisco Center Room D")}`,
   ];
-
-  if (mapsLink) {
-    body.push("", `Google Maps: ${mapsLink}`);
-  }
 
   MailApp.sendEmail({
     to: emailAddress,
