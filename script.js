@@ -16,6 +16,7 @@ const dmwLicense = "288-LB-03062024-R";
 
 const dateField = form.querySelector('input[name="date"]');
 let lastGeneratedMessage = "";
+let lastConfirmationCode = "";
 
 function setStatus(message, state = "") {
   statusEl.textContent = message;
@@ -24,6 +25,29 @@ function setStatus(message, state = "") {
 
 function clean(value) {
   return String(value ?? "").trim();
+}
+
+function pad(value) {
+  return String(value).padStart(2, "0");
+}
+
+function formatDateCode(date = new Date()) {
+  return [
+    String(date.getFullYear()).slice(-2),
+    pad(date.getMonth() + 1),
+    pad(date.getDate()),
+  ].join("");
+}
+
+function generateConfirmationCode() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const now = new Date();
+  const randomPart = Array.from({ length: 4 }, () => {
+    const index = Math.floor(Math.random() * alphabet.length);
+    return alphabet[index];
+  }).join("");
+
+  return `RM-${formatDateCode(now)}-${randomPart}`;
 }
 
 function formatDateText(value) {
@@ -70,6 +94,7 @@ function buildAppointmentMessage(lead) {
     "",
     `You have been invited for an interview on ${dateText}, from ${timeText} at our office, Rite Merit International Manpower Corporation, for a ${purposePhrase} as a ${position} bound for ${country}.`,
     "",
+    `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
     `Date to report: ${dateText}`,
     `DMW License: ${dmwLicense}`,
     "",
@@ -103,6 +128,7 @@ function normalizeLead(rawLead) {
     desiredCountry: clean(rawLead.desiredCountry),
     passportStatus: clean(rawLead.passportStatus),
     notes: clean(rawLead.notes),
+    confirmationCode: clean(rawLead.confirmationCode) || generateConfirmationCode(),
     createdAt: new Date().toISOString(),
     source: "website-form",
   };
@@ -169,6 +195,8 @@ function ensureSuccessModal() {
       <div class="success-card__icon">✓</div>
       <p class="section-kicker">Appointment booked</p>
       <h2 id="successTitle">Thanks. We received your appointment request.</h2>
+      <p class="success-card__code-label">Reference code</p>
+      <p class="success-card__code" id="generatedCode"></p>
       <p>The representative will review your details and confirm the best schedule.</p>
       <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
       <div class="success-card__message-wrap">
@@ -177,6 +205,8 @@ function ensureSuccessModal() {
       </div>
       <div class="success-modal__actions">
         <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy message</button>
+        <button type="button" class="secondary-btn success-modal__button" data-copy-code>Copy code</button>
+        <button type="button" class="secondary-btn success-modal__button" data-download-message>Download</button>
         <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
       </div>
     </div>
@@ -190,6 +220,8 @@ function ensureSuccessModal() {
   });
 
   modal.querySelector("[data-copy-message]")?.addEventListener("click", copyGeneratedMessage);
+  modal.querySelector("[data-copy-code]")?.addEventListener("click", copyConfirmationCode);
+  modal.querySelector("[data-download-message]")?.addEventListener("click", downloadGeneratedMessage);
 
   return successModal;
 }
@@ -206,12 +238,46 @@ async function copyGeneratedMessage() {
   }
 }
 
+async function copyConfirmationCode() {
+  if (!lastConfirmationCode) return;
+
+  try {
+    await navigator.clipboard.writeText(lastConfirmationCode);
+    setStatus("Reference code copied to clipboard.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not copy the code automatically.", "error");
+  }
+}
+
+function downloadGeneratedMessage() {
+  if (!lastGeneratedMessage) return;
+
+  const blob = new Blob(
+    [`Reference Code: ${lastConfirmationCode}`, "", lastGeneratedMessage],
+    { type: "text/plain;charset=utf-8" },
+  );
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${lastConfirmationCode || "appointment-confirmation"}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function showSuccessModal(lead) {
   const modal = ensureSuccessModal();
   const messageEl = modal.querySelector("#generatedMessage");
+  const codeEl = modal.querySelector("#generatedCode");
+  lastConfirmationCode = lead.confirmationCode || generateConfirmationCode();
   lastGeneratedMessage = buildAppointmentMessage(lead);
   if (messageEl) {
     messageEl.textContent = lastGeneratedMessage;
+  }
+  if (codeEl) {
+    codeEl.textContent = lastConfirmationCode;
   }
   if (successModalTimer) {
     clearTimeout(successModalTimer);

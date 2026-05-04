@@ -295,6 +295,23 @@ h2 {
   text-transform: uppercase;
 }
 
+.success-card__code-label {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.success-card__code {
+  margin: 6px 0 0;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #dbeafe;
+}
+
 .success-card__message {
   margin: 0;
   white-space: pre-wrap;
@@ -313,7 +330,7 @@ h2 {
 }
 
 .success-modal__button {
-  min-width: 160px;
+  min-width: 140px;
 }
 
 .panel {

@@ -16,6 +16,7 @@ const HEADER_ROW = [
   "Desired Country",
   "Desired Position",
   "Notes",
+  "Confirmation Code",
   "Created At",
   "Source",
 ];
@@ -69,6 +70,7 @@ function doPost(e) {
       asText(payload.desiredCountry || ""),
       asText(payload.desiredPosition || ""),
       asText(payload.notes || ""),
+      asText(payload.confirmationCode || ""),
       asText(payload.createdAt || ""),
       asText(payload.source || ""),
     ]);
