@@ -71,16 +71,12 @@ function formatDateText(value) {
 
 function getPurposePhrase(purpose) {
   switch (clean(purpose)) {
-    case "Book an Appointment":
-      return "appointment";
-    case "Receive a Call from a Rite Merit Representative":
+    case "Receive Call":
       return "call with a Rite Merit representative";
-    case "Schedule a Follow-Up Call":
-      return "follow-up call";
-    case "Visit the Office":
+    case "Visit to Office":
       return "office visit";
-    case "Learn More About Job Opportunities":
-      return "discussion about job opportunities";
+    case "Schedule Call":
+      return "scheduled call";
     default:
       return "appointment";
   }
@@ -97,7 +93,7 @@ function buildAppointmentMessage(lead) {
   return [
     `Hi, ${name},`,
     "",
-    `You have been invited for an interview on ${dateText}, from ${timeText} at our office, Rite Merit International Manpower Corporation, for a ${purposePhrase} as a ${position} bound for ${country}.`,
+    `You have been invited for an interview on ${dateText}, from ${timeText} at our office, Rite Merit International Manpower Corporation, for ${purposePhrase} regarding your application as a ${position} bound for ${country}.`,
     "",
     `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
     `Date to report: ${dateText}`,
