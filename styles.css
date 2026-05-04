@@ -269,7 +269,7 @@ h2 {
 .success-modal__panel {
   position: relative;
   z-index: 1;
-  width: min(560px, 100%);
+  width: min(720px, 100%);
   padding: 32px;
   display: grid;
   gap: 14px;
@@ -277,10 +277,43 @@ h2 {
   pointer-events: auto;
 }
 
-.success-modal__button {
-  justify-self: center;
+.success-card__message-wrap {
   margin-top: 6px;
-  min-width: 140px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(15, 23, 42, 0.6);
+  text-align: left;
+}
+
+.success-card__label {
+  margin: 0 0 10px;
+  color: var(--accent-2);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.success-card__message {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.success-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.success-modal__button {
+  min-width: 160px;
 }
 
 .panel {

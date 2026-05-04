@@ -8,7 +8,14 @@ const googleSheetsEndpoint =
   window.GOOGLE_SHEETS_WEB_APP_URL ||
   "";
 
+const officeAddress =
+  "1570 A. Mabini St, Ermita, Manila, 4th Floor Gedisco Center Room D";
+const officeHours = "10:00 AM to 5:00 PM";
+const officeContact = "+63 926 640 6364";
+const dmwLicense = "288-LB-03062024-R";
+
 const dateField = form.querySelector('input[name="date"]');
+let lastGeneratedMessage = "";
 
 function setStatus(message, state = "") {
   statusEl.textContent = message;
@@ -17,6 +24,65 @@ function setStatus(message, state = "") {
 
 function clean(value) {
   return String(value ?? "").trim();
+}
+
+function formatDateText(value) {
+  const text = clean(value);
+  if (!text) return "";
+
+  const parsed = new Date(`${text}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return text;
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(parsed);
+}
+
+function getPurposePhrase(purpose) {
+  switch (clean(purpose)) {
+    case "Book an Appointment":
+      return "appointment";
+    case "Receive a Call from a Rite Merit Representative":
+      return "call with a Rite Merit representative";
+    case "Schedule a Follow-Up Call":
+      return "follow-up call";
+    case "Visit the Office":
+      return "office visit";
+    case "Learn More About Job Opportunities":
+      return "discussion about job opportunities";
+    default:
+      return "appointment";
+  }
+}
+
+function buildAppointmentMessage(lead) {
+  const name = clean(lead.fullName) || "Worker Name";
+  const dateText = formatDateText(lead.date) || "your selected date";
+  const timeText = clean(lead.time) || "your selected time";
+  const purposePhrase = getPurposePhrase(lead.purpose);
+  const position = clean(lead.desiredPosition).toUpperCase() || "POSITION";
+  const country = clean(lead.desiredCountry).toUpperCase() || "COUNTRY";
+
+  return [
+    `Hi, ${name},`,
+    "",
+    `You have been invited for an interview on ${dateText}, from ${timeText} at our office, Rite Merit International Manpower Corporation, for a ${purposePhrase} as a ${position} bound for ${country}.`,
+    "",
+    `Date to report: ${dateText}`,
+    `DMW License: ${dmwLicense}`,
+    "",
+    `Our office is located at ${officeAddress}. We are open from ${officeHours}.`,
+    "",
+    "Kindly look for Mr. Clip/Solomon or Ms. Chavz.",
+    "",
+    "Please remember to bring your updated passport.",
+    "",
+    `If you have any questions, feel free to call us at ${officeContact}.`,
+    "",
+    "- Admin Clip",
+  ].join("\n");
 }
 
 function normalizeLead(rawLead) {
@@ -105,7 +171,14 @@ function ensureSuccessModal() {
       <h2 id="successTitle">Thanks. We received your appointment request.</h2>
       <p>The representative will review your details and confirm the best schedule.</p>
       <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
-      <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
+      <div class="success-card__message-wrap">
+        <p class="success-card__label">Ready-to-send message</p>
+        <pre class="success-card__message" id="generatedMessage"></pre>
+      </div>
+      <div class="success-modal__actions">
+        <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy message</button>
+        <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
+      </div>
     </div>
   `;
 
@@ -116,11 +189,30 @@ function ensureSuccessModal() {
     element.addEventListener("click", hideSuccessModal);
   });
 
+  modal.querySelector("[data-copy-message]")?.addEventListener("click", copyGeneratedMessage);
+
   return successModal;
 }
 
-function showSuccessModal() {
+async function copyGeneratedMessage() {
+  if (!lastGeneratedMessage) return;
+
+  try {
+    await navigator.clipboard.writeText(lastGeneratedMessage);
+    setStatus("Message copied to clipboard.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus("We could not copy the message automatically.", "error");
+  }
+}
+
+function showSuccessModal(lead) {
   const modal = ensureSuccessModal();
+  const messageEl = modal.querySelector("#generatedMessage");
+  lastGeneratedMessage = buildAppointmentMessage(lead);
+  if (messageEl) {
+    messageEl.textContent = lastGeneratedMessage;
+  }
   if (successModalTimer) {
     clearTimeout(successModalTimer);
     successModalTimer = null;
@@ -173,9 +265,9 @@ form.addEventListener("submit", async (event) => {
     form.reset();
 
     if (syncResult.synced) {
-      showSuccessModal();
+      showSuccessModal(lead);
     } else {
-      showSuccessModal();
+      showSuccessModal(lead);
       console.warn("Google Sheets endpoint is not configured.");
     }
   } catch (error) {
