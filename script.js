@@ -13,6 +13,7 @@ const officeAddress =
 const officeHours = "10:00 AM to 5:00 PM";
 const officeContact = "+63 926 640 6364";
 const dmwLicense = "288-LB-03062024-R";
+const officeLogoUrl = "Photos/rm logo.jpeg";
 const officeMapUrl = `https://www.google.com/maps?q=${encodeURIComponent(officeAddress)}&output=embed`;
 const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddress)}`;
 
@@ -20,6 +21,7 @@ const dateField = form.querySelector('input[name="date"]');
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
 let lastSubmittedLead = null;
+let cachedLogoDataUrl = null;
 
 function setStatus(message, state = "") {
   statusEl.textContent = message;
@@ -143,6 +145,37 @@ function buildAppointmentPassText(lead) {
   ].join("\n");
 }
 
+function getOfficeLogoDataUrl() {
+  if (cachedLogoDataUrl !== null) {
+    return Promise.resolve(cachedLogoDataUrl);
+  }
+
+  return fetch(officeLogoUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to load logo: ${response.status}`);
+      }
+      return response.blob();
+    })
+    .then(
+      (blob) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            cachedLogoDataUrl = String(reader.result || "");
+            resolve(cachedLogoDataUrl);
+          };
+          reader.onerror = () => reject(reader.error || new Error("Failed to read logo"));
+          reader.readAsDataURL(blob);
+        }),
+    )
+    .catch((error) => {
+      console.warn("Using fallback pass image without logo.", error);
+      cachedLogoDataUrl = "";
+      return "";
+    });
+}
+
 function escapeXml(value) {
   return clean(value)
     .replaceAll("&", "&amp;")
@@ -152,7 +185,7 @@ function escapeXml(value) {
     .replaceAll("'", "&apos;");
 }
 
-function buildAppointmentPassSvg(lead) {
+function buildAppointmentPassSvg(lead, logoDataUrl = "") {
   const lines = [
     "APPOINTMENT PASS",
     `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
@@ -174,6 +207,23 @@ function buildAppointmentPassSvg(lead) {
       `,
     )
     .join("");
+
+  const logoBlock = logoDataUrl
+    ? `
+      <rect x="72" y="72" width="144" height="144" rx="28" fill="#ffffff" opacity="0.08" />
+      <image
+        x="84"
+        y="84"
+        width="120"
+        height="120"
+        href="${logoDataUrl}"
+        preserveAspectRatio="xMidYMid meet"
+      />
+    `
+    : `
+      <rect x="72" y="72" width="144" height="144" rx="28" fill="url(#accent)" opacity="0.18" />
+      <text x="105" y="154" class="badge">RM</text>
+    `;
 
   return `
     <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1620" viewBox="0 0 1080 1620">
@@ -197,8 +247,11 @@ function buildAppointmentPassSvg(lead) {
       <rect width="1080" height="1620" rx="48" fill="url(#bg)" />
       <rect x="48" y="48" width="984" height="1524" rx="40" fill="rgba(15,23,42,0.9)" stroke="rgba(148,163,184,0.25)" />
       <rect x="48" y="48" width="984" height="18" rx="9" fill="url(#accent)" />
+      ${logoBlock}
       <text x="72" y="160" class="sub">Rite Merit International Manpower Corporation</text>
       <text x="72" y="230" class="title">APPOINTMENT PASS</text>
+      <text x="240" y="122" class="small">Reference Code</text>
+      <text x="240" y="166" class="pass-line" style="font-size: 28px; letter-spacing: 2px;">${escapeXml(clean(lead.confirmationCode) || "RM-XXXXXX-XXXX")}</text>
       <rect x="72" y="1340" width="936" height="150" rx="26" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.35)" />
       <text x="96" y="1392" class="small">Office address</text>
       <text x="96" y="1440" class="pass-line" style="font-size: 30px;">${escapeXml(officeAddress)}</text>
@@ -344,7 +397,7 @@ function ensureSuccessModal() {
             <button type="button" class="secondary-btn success-modal__button" data-copy-code>Copy code</button>
             <button type="button" class="secondary-btn success-modal__button" data-copy-address>Copy office address</button>
             <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy full message</button>
-            <button type="button" class="secondary-btn success-modal__button" data-download-message>Download text</button>
+            <button type="button" class="secondary-btn success-modal__button" data-download-message>Download message</button>
           </div>
         </div>
         <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
@@ -465,7 +518,8 @@ async function shareAppointmentPass() {
 async function buildAppointmentPassFile() {
   if (!lastSubmittedLead) return null;
 
-  const blob = new Blob([buildAppointmentPassSvg(lastSubmittedLead)], {
+  const logoDataUrl = await getOfficeLogoDataUrl();
+  const blob = new Blob([buildAppointmentPassSvg(lastSubmittedLead, logoDataUrl)], {
     type: "image/svg+xml;charset=utf-8",
   });
   return new File([blob], `${lastConfirmationCode || "appointment-pass"}.svg`, {
