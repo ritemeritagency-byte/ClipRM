@@ -19,6 +19,7 @@ const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${e
 const dateField = form.querySelector('input[name="date"]');
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
+let lastSubmittedLead = null;
 
 function setStatus(message, state = "") {
   statusEl.textContent = message;
@@ -297,7 +298,13 @@ function ensureSuccessModal() {
       <h2 id="successTitle">Thanks. We received your appointment request.</h2>
       <p class="success-card__code-label">Reference code</p>
       <p class="success-card__code" id="generatedCode"></p>
-      <div class="success-card__pass" id="generatedPass"></div>
+      <div class="success-card__pass-shell">
+        <div class="success-card__pass-head">
+          <span>Appointment pass</span>
+          <strong id="generatedCodeInline"></strong>
+        </div>
+        <div class="success-card__pass" id="generatedPass"></div>
+      </div>
       <p>The representative will review your details and confirm the best schedule.</p>
       <p class="success-card__meta">If you need to update anything, please contact the agency directly.</p>
       <div class="success-card__message-wrap">
@@ -320,13 +327,6 @@ function ensureSuccessModal() {
           <p class="success-card__office-text">Hours: ${officeHours}</p>
           <p class="success-card__office-text">Contact: ${officeContact}</p>
         </div>
-      </div>
-      <div class="success-card__pass-shell">
-        <div class="success-card__pass-head">
-          <span>Appointment pass</span>
-          <strong id="generatedCodeInline"></strong>
-        </div>
-        <div class="success-card__pass" id="generatedPass"></div>
       </div>
       <div class="success-modal__actions">
         <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy message</button>
@@ -422,17 +422,9 @@ function printAppointmentPass() {
 }
 
 async function shareAppointmentPass() {
-  if (!lastConfirmationCode) return;
+  if (!lastSubmittedLead) return;
 
-  const text = `${buildAppointmentPassText({
-    confirmationCode: lastConfirmationCode,
-    fullName: form.querySelector('input[name="fullName"]')?.value,
-    purpose: form.querySelector('select[name="purpose"]')?.value,
-    date: form.querySelector('input[name="date"]')?.value,
-    time: form.querySelector('select[name="time"]')?.value,
-    desiredPosition: form.querySelector('select[name="desiredPosition"]')?.value,
-    desiredCountry: form.querySelector('select[name="desiredCountry"]')?.value,
-  })}`;
+  const text = buildAppointmentPassText(lastSubmittedLead);
 
   try {
     if (navigator.share) {
@@ -461,25 +453,22 @@ async function shareAppointmentPass() {
 }
 
 async function buildAppointmentPassFile() {
-  const lead = {
-    confirmationCode: lastConfirmationCode,
-    fullName: form.querySelector('input[name="fullName"]')?.value,
-    purpose: form.querySelector('select[name="purpose"]')?.value,
-    date: form.querySelector('input[name="date"]')?.value,
-    time: form.querySelector('select[name="time"]')?.value,
-    desiredPosition: form.querySelector('select[name="desiredPosition"]')?.value,
-    desiredCountry: form.querySelector('select[name="desiredCountry"]')?.value,
-  };
+  if (!lastSubmittedLead) return null;
 
-  const blob = new Blob([buildAppointmentPassSvg(lead)], { type: "image/svg+xml;charset=utf-8" });
+  const blob = new Blob([buildAppointmentPassSvg(lastSubmittedLead)], {
+    type: "image/svg+xml;charset=utf-8",
+  });
   return new File([blob], `${lastConfirmationCode || "appointment-pass"}.svg`, {
     type: "image/svg+xml",
   });
 }
 
 async function downloadAppointmentPass() {
+  if (!lastSubmittedLead) return;
+
   try {
     const file = await buildAppointmentPassFile();
+    if (!file) return;
     const url = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = url;
@@ -501,6 +490,7 @@ function showSuccessModal(lead) {
   const codeEl = modal.querySelector("#generatedCode");
   const codeInlineEl = modal.querySelector("#generatedCodeInline");
   const passEl = modal.querySelector("#generatedPass");
+  lastSubmittedLead = lead;
   lastConfirmationCode = lead.confirmationCode || generateConfirmationCode();
   lastGeneratedMessage = buildAppointmentMessage(lead);
   if (messageEl) {

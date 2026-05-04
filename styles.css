@@ -789,6 +789,20 @@ textarea {
     border-radius: 18px;
   }
 
+  .success-modal {
+    padding: 10px;
+    align-items: stretch;
+  }
+
+  .success-modal__panel {
+    width: 100%;
+    max-height: calc(100dvh - 20px);
+    overflow-y: auto;
+    padding: 18px;
+    gap: 12px;
+    border-radius: 20px;
+  }
+
   .success-card__office,
   .success-card__pass-shell {
     padding: 14px;
@@ -806,6 +820,24 @@ textarea {
 
   .success-card__pass-grid {
     grid-template-columns: 1fr;
+  }
+
+  .success-card__message-wrap,
+  .success-card__office-map {
+    display: none;
+  }
+
+  .success-card__message-wrap {
+    padding: 12px;
+  }
+
+  .success-card__message {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .success-card__office {
+    gap: 10px;
   }
 
   .sheet-note {
@@ -1177,6 +1209,8 @@ textarea:focus {
   }
 
   .success-modal__panel {
-    padding: 24px;
+    padding: 18px;
+    max-height: calc(100dvh - 20px);
+    overflow-y: auto;
   }
 }
