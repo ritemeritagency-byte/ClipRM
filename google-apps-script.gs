@@ -8,25 +8,16 @@ const HEADER_ROW = [
   "Full Name",
   "Phone Number",
   "Email Address",
-  "Email Status",
-  "Email Error",
   "Purpose",
   "Date",
   "Time",
   "Location",
-  "GPS Latitude",
-  "GPS Longitude",
-  "GPS Accuracy",
-  "GPS Maps Link",
-  "GPS Captured At",
   "Age",
   "Passport Status",
   "Desired Country",
   "Desired Position",
   "Notes",
   "Confirmation Code",
-  "Created At",
-  "Source",
 ];
 
 function asText(value) {
@@ -87,25 +78,16 @@ function doPost(e) {
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
       asText(payload.emailAddress || ""),
-      emailResult.sent ? "sent" : "failed",
-      emailResult.error || "",
       normalizePurpose(payload.purpose || ""),
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
       asText(payload.location || ""),
-      asText(payload.gpsLatitude || ""),
-      asText(payload.gpsLongitude || ""),
-      asText(payload.gpsAccuracy || ""),
-      asText(payload.gpsMapsLink || ""),
-      asText(payload.gpsCapturedAt || ""),
       asText(payload.age || ""),
       asText(payload.passportStatus || ""),
       asText(payload.desiredCountry || ""),
       asText(payload.desiredPosition || ""),
       asText(payload.notes || ""),
       asText(payload.confirmationCode || ""),
-      asText(payload.createdAt || ""),
-      asText(payload.source || ""),
     ]);
 
     return jsonResponse({ ok: true, emailSent: emailResult.sent, emailError: emailResult.error || "" });
@@ -166,6 +148,10 @@ function getOrCreateSheet() {
     headerRange.setValues([HEADER_ROW]);
   }
 
+  if (sheet.getMaxColumns() > HEADER_ROW.length) {
+    sheet.deleteColumns(HEADER_ROW.length + 1, sheet.getMaxColumns() - HEADER_ROW.length);
+  }
+
   sheet.setFrozenRows(1);
 
   return sheet;
@@ -184,7 +170,6 @@ function sendConfirmationEmail(payload) {
   const purpose = normalizePurpose(payload.purpose || "Appointment");
   const position = asText(payload.desiredPosition || "");
   const country = asText(payload.desiredCountry || "");
-  const mapsLink = asText(payload.gpsMapsLink || "");
 
   const body = [
     `Hi ${fullName},`,

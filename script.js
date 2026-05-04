@@ -18,18 +18,10 @@ const officeMapUrl = `https://www.google.com/maps?q=${encodeURIComponent(officeA
 const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddress)}`;
 
 const dateField = form.querySelector('input[name="date"]');
-const shareLocationBtn = document.getElementById("shareLocationBtn");
-const locationStatusEl = document.getElementById("locationStatus");
-const gpsLatitudeInput = form.querySelector('input[name="gpsLatitude"]');
-const gpsLongitudeInput = form.querySelector('input[name="gpsLongitude"]');
-const gpsAccuracyInput = form.querySelector('input[name="gpsAccuracy"]');
-const gpsMapsLinkInput = form.querySelector('input[name="gpsMapsLink"]');
-const gpsCapturedAtInput = form.querySelector('input[name="gpsCapturedAt"]');
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
 let lastSubmittedLead = null;
 let cachedLogoDataUrl = null;
-let isSharingLocation = false;
 
 function setStatus(message, state = "") {
   statusEl.textContent = message;
@@ -38,104 +30,6 @@ function setStatus(message, state = "") {
 
 function clean(value) {
   return String(value ?? "").trim();
-}
-
-function setLocationStatus(message, state = "") {
-  if (!locationStatusEl) return;
-  locationStatusEl.textContent = message;
-  locationStatusEl.dataset.state = state;
-}
-
-function setGpsFields(value = {}) {
-  if (gpsLatitudeInput) gpsLatitudeInput.value = value.latitude ?? "";
-  if (gpsLongitudeInput) gpsLongitudeInput.value = value.longitude ?? "";
-  if (gpsAccuracyInput) gpsAccuracyInput.value = value.accuracy ?? "";
-  if (gpsMapsLinkInput) gpsMapsLinkInput.value = value.mapsLink ?? "";
-  if (gpsCapturedAtInput) gpsCapturedAtInput.value = value.capturedAt ?? "";
-}
-
-function formatGpsCoordinate(value) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number.toFixed(6) : "";
-}
-
-function shareCurrentLocation() {
-  if (isSharingLocation) return;
-
-  if (!window.isSecureContext) {
-    setLocationStatus("Location sharing needs a secure browser context.", "error");
-    return;
-  }
-
-  if (!navigator.geolocation) {
-    setLocationStatus("Your browser does not support location sharing.", "error");
-    return;
-  }
-
-  isSharingLocation = true;
-  if (shareLocationBtn) {
-    shareLocationBtn.disabled = true;
-    shareLocationBtn.dataset.state = "sharing";
-    shareLocationBtn.textContent = "Sharing location...";
-  }
-  setLocationStatus("Waiting for location permission...", "");
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const latitude = formatGpsCoordinate(position.coords.latitude);
-      const longitude = formatGpsCoordinate(position.coords.longitude);
-      const accuracy = Number.isFinite(position.coords.accuracy)
-        ? String(Math.round(position.coords.accuracy))
-        : "";
-      const mapsLink = latitude && longitude ? `https://www.google.com/maps?q=${latitude},${longitude}` : "";
-      const capturedAt = new Date().toISOString();
-
-      setGpsFields({
-        latitude,
-        longitude,
-        accuracy,
-        mapsLink,
-        capturedAt,
-      });
-
-      setLocationStatus(
-        `Location shared. Accuracy: ${accuracy ? `${accuracy} m` : "unknown"}.`,
-        "success",
-      );
-
-      isSharingLocation = false;
-      if (shareLocationBtn) {
-        shareLocationBtn.disabled = false;
-        delete shareLocationBtn.dataset.state;
-        shareLocationBtn.textContent = "Share current location";
-      }
-    },
-    (error) => {
-      const message =
-        error.code === 1
-          ? "Location access was not allowed."
-          : error.code === 2
-            ? "Your location could not be determined."
-            : error.code === 3
-              ? "Location request timed out."
-              : "We could not read your location.";
-
-      setGpsFields();
-      setLocationStatus(message, "error");
-
-      isSharingLocation = false;
-      if (shareLocationBtn) {
-        shareLocationBtn.disabled = false;
-        delete shareLocationBtn.dataset.state;
-        shareLocationBtn.textContent = "Share current location";
-      }
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 12000,
-      maximumAge: 0,
-    },
-  );
 }
 
 function pad(value) {
@@ -208,8 +102,6 @@ function buildAppointmentMessage(lead) {
   const purposeSummary = getPurposeSummary(lead.purpose);
   const position = clean(lead.desiredPosition).toUpperCase() || "POSITION";
   const country = clean(lead.desiredCountry).toUpperCase() || "COUNTRY";
-  const sharedLocation = clean(lead.gpsMapsLink);
-
   const lines = [
     `Hi, ${name},`,
     "",
@@ -233,10 +125,6 @@ function buildAppointmentMessage(lead) {
     "",
     "- Admin Clip",
   ];
-
-  if (sharedLocation) {
-    lines.splice(10, 0, `Shared location: ${sharedLocation}`);
-  }
 
   return lines.join("\n");
 }
@@ -323,7 +211,6 @@ function buildOfficeCardSvg(logoDataUrl = "") {
 function buildAppointmentPassText(lead) {
   const dateText = formatDateText(lead.date) || "your selected date";
   const timeText = clean(lead.time) || "your selected time";
-  const sharedLocation = clean(lead.gpsMapsLink);
 
   const lines = [
     "APPOINTMENT PASS",
@@ -338,10 +225,6 @@ function buildAppointmentPassText(lead) {
     `Hours: ${officeHours}`,
     `Contact: ${officeContact}`,
   ];
-
-  if (sharedLocation) {
-    lines.push(`Shared location: ${sharedLocation}`);
-  }
 
   return lines.join("\n");
 }
@@ -397,7 +280,6 @@ function escapeXml(value) {
 }
 
 function buildAppointmentPassSvg(lead, logoDataUrl = "") {
-  const sharedLocation = clean(lead.gpsMapsLink);
   const lines = [
     "APPOINTMENT PASS",
     `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
@@ -411,10 +293,6 @@ function buildAppointmentPassSvg(lead, logoDataUrl = "") {
     `Hours: ${officeHours}`,
     `Contact: ${officeContact}`,
   ];
-
-  if (sharedLocation) {
-    lines.push(`Shared location: ${sharedLocation}`);
-  }
 
   const textNodes = lines
     .map(
@@ -499,11 +377,6 @@ function normalizeLead(rawLead) {
     desiredCountry: clean(rawLead.desiredCountry),
     passportStatus: clean(rawLead.passportStatus),
     notes: clean(rawLead.notes),
-    gpsLatitude: clean(rawLead.gpsLatitude),
-    gpsLongitude: clean(rawLead.gpsLongitude),
-    gpsAccuracy: clean(rawLead.gpsAccuracy),
-    gpsMapsLink: clean(rawLead.gpsMapsLink),
-    gpsCapturedAt: clean(rawLead.gpsCapturedAt),
     confirmationCode: clean(rawLead.confirmationCode) || generateConfirmationCode(),
     createdAt: new Date().toISOString(),
     source: "website-form",
@@ -814,10 +687,6 @@ function showSuccessModal(lead) {
     codeInlineEl.textContent = lastConfirmationCode;
   }
   if (passEl) {
-    const sharedLocationBlock = lead.gpsMapsLink
-      ? `<div class="success-card__pass-full"><span>Shared location</span><strong>Captured and saved for office review</strong></div>`
-      : "";
-
     passEl.innerHTML = `
       <div class="success-card__pass-grid">
         <div><span>Name</span><strong>${clean(lead.fullName)}</strong></div>
@@ -826,7 +695,6 @@ function showSuccessModal(lead) {
         <div><span>Purpose</span><strong>${clean(lead.purpose)}</strong></div>
         <div><span>Position</span><strong>${clean(lead.desiredPosition)}</strong></div>
         <div><span>Country</span><strong>${clean(lead.desiredCountry)}</strong></div>
-        ${sharedLocationBlock}
         <div class="success-card__pass-full"><span>Show at office</span><strong>${officeAddress}</strong></div>
       </div>
     `;
@@ -895,19 +763,6 @@ form.addEventListener("submit", async (event) => {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit";
   }
-});
-
-shareLocationBtn?.addEventListener("click", shareCurrentLocation);
-
-form.addEventListener("reset", () => {
-  setGpsFields();
-  setLocationStatus("Location not shared yet.");
-  if (shareLocationBtn) {
-    shareLocationBtn.disabled = false;
-    delete shareLocationBtn.dataset.state;
-    shareLocationBtn.textContent = "Share current location";
-  }
-  isSharingLocation = false;
 });
 
 if (!googleSheetsEndpoint) {

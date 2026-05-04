@@ -62,8 +62,8 @@
               <strong>Call, office, or follow-up</strong>
             </div>
             <div class="form-summary__item">
-              <span>Location sharing</span>
-              <strong>Optional and consent-based</strong>
+              <span>Office details</span>
+              <strong>Included in confirmation</strong>
             </div>
           </div>
 
@@ -115,18 +115,6 @@
                 <span>Location <em>*</em></span>
                 <input name="location" type="text" placeholder="City / area" required />
               </label>
-
-              <div class="field field--full location-share">
-                <div class="location-share__row">
-                  <button type="button" class="secondary-btn location-share__button" id="shareLocationBtn">
-                    Share current location
-                  </button>
-                  <p class="location-share__note">
-                    Optional. The applicant must allow location access on their phone or laptop.
-                  </p>
-                </div>
-                <p class="location-share__status" id="locationStatus">Location not shared yet.</p>
-              </div>
 
               <label class="field field--full">
                 <span>Appointment Notes</span>
@@ -211,13 +199,6 @@
           <div class="actions">
             <button type="submit" class="primary-btn">Book appointment</button>
           </div>
-
-          <input type="hidden" name="gpsLatitude" />
-          <input type="hidden" name="gpsLongitude" />
-          <input type="hidden" name="gpsAccuracy" />
-          <input type="hidden" name="gpsMapsLink" />
-          <input type="hidden" name="gpsCapturedAt" />
-
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </form>
 
