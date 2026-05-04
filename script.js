@@ -204,6 +204,7 @@ function buildOfficeCardSvg(logoDataUrl = "") {
       <rect x="72" y="1228" width="936" height="148" rx="28" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.35)" />
       <text x="96" y="1280" class="sub">Save this card and show it at the office</text>
       <text x="96" y="1332" class="pass-line" style="font-size: 28px;">Included in your confirmation email too</text>
+      <text x="760" y="1568" class="small" style="text-anchor: end;">Admin Clip</text>
     </svg>
   `.trim();
 }
@@ -354,6 +355,7 @@ function buildAppointmentPassSvg(lead, logoDataUrl = "") {
       <text x="72" y="1250" class="small">DMW License: ${escapeXml(dmwLicense)}</text>
       <rect x="72" y="1270" width="936" height="2" fill="rgba(148,163,184,0.18)" />
       <text x="72" y="1330" class="small">Show this pass at the office together with your reference code.</text>
+      <text x="72" y="1568" class="small">Admin Clip</text>
     </svg>
   `.trim();
 }
