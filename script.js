@@ -329,14 +329,24 @@ function ensureSuccessModal() {
         </div>
       </div>
       <div class="success-modal__actions">
-        <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy message</button>
-        <button type="button" class="secondary-btn success-modal__button" data-copy-code>Copy code</button>
-        <a class="secondary-btn success-modal__button success-modal__link" href="${officeDirectionsUrl}" target="_blank" rel="noreferrer">Open map</a>
-        <button type="button" class="secondary-btn success-modal__button" data-copy-address>Copy address</button>
-        <button type="button" class="secondary-btn success-modal__button" data-print-pass>Print / Save pass</button>
-        <button type="button" class="secondary-btn success-modal__button" data-share-pass>Share pass</button>
-        <button type="button" class="secondary-btn success-modal__button" data-download-pass>Save pass image</button>
-        <button type="button" class="secondary-btn success-modal__button" data-download-message>Download</button>
+        <div class="success-modal__action-group">
+          <p class="success-modal__group-label">Quick actions</p>
+          <div class="success-modal__button-grid">
+            <button type="button" class="primary-btn success-modal__button" data-share-pass>Share pass</button>
+            <button type="button" class="secondary-btn success-modal__button" data-download-pass>Save pass image</button>
+            <a class="secondary-btn success-modal__button success-modal__link" href="${officeDirectionsUrl}" target="_blank" rel="noreferrer">Open map</a>
+            <button type="button" class="secondary-btn success-modal__button" data-print-pass>Print / PDF</button>
+          </div>
+        </div>
+        <div class="success-modal__action-group">
+          <p class="success-modal__group-label">Copy details</p>
+          <div class="success-modal__button-grid">
+            <button type="button" class="secondary-btn success-modal__button" data-copy-code>Copy code</button>
+            <button type="button" class="secondary-btn success-modal__button" data-copy-address>Copy office address</button>
+            <button type="button" class="secondary-btn success-modal__button" data-copy-message>Copy full message</button>
+            <button type="button" class="secondary-btn success-modal__button" data-download-message>Download text</button>
+          </div>
+        </div>
         <button type="button" class="primary-btn success-modal__button" data-close-success>Done</button>
       </div>
     </div>

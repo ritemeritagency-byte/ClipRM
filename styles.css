@@ -437,15 +437,35 @@ h2 {
 }
 
 .success-modal__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  display: grid;
+  gap: 14px;
   margin-top: 6px;
+  text-align: left;
+}
+
+.success-modal__action-group {
+  display: grid;
+  gap: 10px;
+}
+
+.success-modal__group-label {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.success-modal__button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .success-modal__button {
-  min-width: 140px;
+  width: 100%;
+  min-height: 48px;
 }
 
 .success-modal__link {
@@ -803,6 +823,10 @@ textarea {
     border-radius: 20px;
   }
 
+  .success-modal__button-grid {
+    grid-template-columns: 1fr;
+  }
+
   .success-card__office,
   .success-card__pass-shell {
     padding: 14px;
@@ -834,6 +858,10 @@ textarea {
   .success-card__message {
     font-size: 0.9rem;
     line-height: 1.55;
+  }
+
+  .success-modal__group-label {
+    font-size: 0.74rem;
   }
 
   .success-card__office {
@@ -1212,5 +1240,9 @@ textarea:focus {
     padding: 18px;
     max-height: calc(100dvh - 20px);
     overflow-y: auto;
+  }
+
+  .success-modal__button-grid {
+    grid-template-columns: 1fr;
   }
 }
