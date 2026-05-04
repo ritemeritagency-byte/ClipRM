@@ -2,6 +2,9 @@ const SPREADSHEET_ID = "116oDzuFsqnakjbEJaT4RjRrthWuwE-RS3yNG4-wbccs";
 const SHEET_NAME = "CallSched";
 const HEADER_ROW = [
   "Timestamp",
+  "Agency Name",
+  "Agent",
+  "Representative Name",
   "Full Name",
   "Phone Number",
   "Purpose",
@@ -13,7 +16,8 @@ const HEADER_ROW = [
   "Desired Country",
   "Desired Position",
   "Notes",
-  "Agent",
+  "Created At",
+  "Source",
 ];
 
 function asText(value) {
@@ -51,8 +55,11 @@ function doPost(e) {
 
     sheet.appendRow([
       new Date(),
+      asText(payload.agencyName || ""),
+      asText(payload.agent || ""),
+      asText(payload.representativeName || ""),
       asText(payload.fullName || payload.workerName || ""),
-      "",
+      asText(payload.phoneNumber || ""),
       asText(payload.purpose || ""),
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
@@ -62,13 +69,9 @@ function doPost(e) {
       asText(payload.desiredCountry || ""),
       asText(payload.desiredPosition || ""),
       asText(payload.notes || ""),
-      asText(payload.representativeName || payload.agent || ""),
+      asText(payload.createdAt || ""),
+      asText(payload.source || ""),
     ]);
-
-    const row = sheet.getLastRow();
-    const phoneCell = sheet.getRange(row, 3);
-    phoneCell.setNumberFormat("@");
-    phoneCell.setValue(asText(payload.phoneNumber || ""));
 
     return jsonResponse({ ok: true });
   } catch (error) {
