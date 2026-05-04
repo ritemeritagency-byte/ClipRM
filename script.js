@@ -82,18 +82,35 @@ function getPurposePhrase(purpose) {
   }
 }
 
+function getPurposeSummary(purpose) {
+  switch (clean(purpose)) {
+    case "Receive a Call from a Rite Merit Representative":
+      return "We will call you at your scheduled time.";
+    case "Visit the Office":
+      return "Please report to our office at the time you selected.";
+    case "Schedule a Follow-Up Call":
+      return "Our representative will follow up with you by phone.";
+    default:
+      return "Please keep this confirmation for your appointment.";
+  }
+}
+
 function buildAppointmentMessage(lead) {
   const name = clean(lead.fullName) || "Worker Name";
   const dateText = formatDateText(lead.date) || "your selected date";
   const timeText = clean(lead.time) || "your selected time";
-  const purposePhrase = getPurposePhrase(lead.purpose);
+  const purposeSummary = getPurposeSummary(lead.purpose);
   const position = clean(lead.desiredPosition).toUpperCase() || "POSITION";
   const country = clean(lead.desiredCountry).toUpperCase() || "COUNTRY";
 
   return [
     `Hi, ${name},`,
     "",
-    `You have been invited for an interview on ${dateText}, from ${timeText} at our office, Rite Merit International Manpower Corporation, for ${purposePhrase} regarding your application as a ${position} bound for ${country}.`,
+    `Your appointment is confirmed for ${dateText} at ${timeText}.`,
+    `${purposeSummary}`,
+    `Purpose: ${clean(lead.purpose) || "Appointment"}`,
+    `Position: ${position}`,
+    `Country: ${country}`,
     "",
     `Reference Code: ${clean(lead.confirmationCode) || "RM-XXXXXX-XXXX"}`,
     `Date to report: ${dateText}`,
