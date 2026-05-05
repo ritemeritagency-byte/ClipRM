@@ -59,6 +59,27 @@ function normalizePurpose(value) {
   }
 }
 
+function normalizeLeadPayload(rawPayload) {
+  const payload = rawPayload || {};
+
+  return {
+    agencyName: asText(payload.agencyName || "Rite Merit International Recruitment Agency"),
+    fullName: asText(payload.fullName || payload.workerName || ""),
+    phoneNumber: asText(payload.phoneNumber || ""),
+    emailAddress: asText(payload.emailAddress || ""),
+    purpose: normalizePurpose(payload.purpose || ""),
+    date: asText(payload.date || ""),
+    time: asText(payload.time || ""),
+    location: asText(payload.location || ""),
+    age: asText(payload.age || ""),
+    passportStatus: asText(payload.passportStatus || ""),
+    desiredCountry: asText(payload.desiredCountry || ""),
+    desiredPosition: asText(payload.desiredPosition || ""),
+    notes: asText(payload.notes || ""),
+    confirmationCode: asText(payload.confirmationCode || ""),
+  };
+}
+
 function doGet() {
   migrateSheetHeaders();
   return jsonResponse({
@@ -69,33 +90,32 @@ function doGet() {
 
 function doPost(e) {
   try {
-    const payload = parsePayload(e);
+    const payload = normalizeLeadPayload(parsePayload(e));
     if (isEmptyPayload(payload)) {
       return jsonResponse({ ok: false, error: "Empty payload" });
     }
-    if (!asText(payload.emailAddress || "")) {
+    if (!payload.emailAddress) {
       return jsonResponse({ ok: false, error: "Email Address is required." });
     }
     const sheet = migrateSheetHeaders();
     const emailResult = sendConfirmationEmail(payload);
-    const purpose = normalizePurpose(payload.purpose || "");
 
     sheet.appendRow([
       new Date(),
-      asText(payload.agencyName || ""),
-      asText(payload.fullName || payload.workerName || ""),
-      asText(payload.phoneNumber || ""),
-      asText(payload.emailAddress || ""),
-      purpose,
-      asText(payload.date || ""),
-      formatTimeDisplay(payload.time || ""),
-      asText(payload.location || ""),
-      asText(payload.age || ""),
-      asText(payload.passportStatus || ""),
-      asText(payload.desiredCountry || ""),
-      asText(payload.desiredPosition || ""),
-      asText(payload.notes || ""),
-      asText(payload.confirmationCode || ""),
+      payload.agencyName,
+      payload.fullName,
+      payload.phoneNumber,
+      payload.emailAddress,
+      payload.purpose,
+      payload.date,
+      formatTimeDisplay(payload.time),
+      payload.location,
+      payload.age,
+      payload.passportStatus,
+      payload.desiredCountry,
+      payload.desiredPosition,
+      payload.notes,
+      payload.confirmationCode,
     ]);
 
     return jsonResponse({ ok: true, emailSent: emailResult.sent, emailError: emailResult.error || "" });
@@ -112,9 +132,10 @@ function doPost(e) {
 
 function isEmptyPayload(payload) {
   return !(
-    asText(payload.fullName || payload.workerName || "") ||
+    asText(payload.fullName || "") ||
     asText(payload.phoneNumber || "") ||
-    normalizePurpose(payload.purpose || "") ||
+    asText(payload.emailAddress || "") ||
+    asText(payload.purpose || "") ||
     asText(payload.date || "") ||
     asText(payload.time || "")
   );
@@ -129,15 +150,18 @@ function parsePayload(e) {
   const raw = e.postData.contents;
 
   if (contentType.includes("application/json") || raw.trim().startsWith("{")) {
-    return JSON.parse(raw);
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      return {};
+    }
   }
 
-  return raw.split("&").reduce((acc, pair) => {
-    const [key, value = ""] = pair.split("=");
-    if (!key) return acc;
-    acc[decodeURIComponent(key)] = decodeURIComponent(value.replace(/\+/g, " "));
-    return acc;
-  }, {});
+  try {
+    return Utilities.parseQueryString(raw);
+  } catch (error) {
+    return {};
+  }
 }
 
 function getOrCreateSheet() {
@@ -183,7 +207,7 @@ function sendConfirmationEmail(payload) {
     return { sent: false, error: "Email Address is required." };
   }
 
-  const fullName = asText(payload.fullName || payload.workerName || "Worker Name");
+  const fullName = asText(payload.fullName || "Worker Name");
   const dateText = asText(payload.date || "");
   const timeText = formatTimeDisplay(payload.time || "");
   const confirmationCode = asText(payload.confirmationCode || "");

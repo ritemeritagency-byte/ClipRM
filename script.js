@@ -516,8 +516,11 @@ function ensureSuccessModal() {
   document.body.appendChild(modal);
   successModal = modal;
 
-  modal.querySelectorAll("[data-close-success]").forEach((element) => {
-    element.addEventListener("click", hideSuccessModal);
+  modal.addEventListener("click", (event) => {
+    const closeTarget = event.target.closest("[data-close-success]");
+    if (!closeTarget) return;
+    event.preventDefault();
+    hideSuccessModal();
   });
 
   modal.querySelector("[data-copy-message]")?.addEventListener("click", copyGeneratedMessage);
@@ -717,6 +720,7 @@ function showSuccessModal(lead) {
     successModalTimer = null;
   }
   modal.hidden = false;
+  modal.style.display = "";
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
   modal.querySelector("[data-close-success]")?.focus();
@@ -729,17 +733,11 @@ function hideSuccessModal() {
     clearTimeout(successModalTimer);
     successModalTimer = null;
   }
+  successModal.style.display = "none";
   successModal.hidden = true;
   successModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
   resetAfterSuccess();
-  window.requestAnimationFrame(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => {
-      form.querySelector("input, select, textarea, button")?.focus();
-    }, 150);
-  });
 }
 
 form.addEventListener("submit", async (event) => {
