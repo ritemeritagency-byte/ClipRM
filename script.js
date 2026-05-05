@@ -19,7 +19,7 @@ const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${e
 
 const dateField = form.querySelector('input[name="date"]');
 const submitBtn = form.querySelector('button[type="submit"]');
-const submitBtnDefaultLabel = submitBtn?.textContent?.trim() || "Book office visit";
+const submitBtnDefaultLabel = submitBtn?.textContent?.trim() || "Confirm booking";
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
 let lastSubmittedLead = null;
@@ -89,7 +89,7 @@ function getPurposeSummary(purpose) {
     case "Receive a Call from a Rite Merit Representative":
       return "We will call you at your scheduled time.";
     case "Visit the Office":
-      return "This is the fastest path to in-person assistance at the office.";
+      return "You selected the fastest path to in-person assistance at the office.";
     case "Schedule a Follow-Up Call":
       return "Our representative will follow up with you by phone.";
     default:

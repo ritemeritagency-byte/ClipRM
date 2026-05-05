@@ -26,10 +26,10 @@
       <header class="form-hero panel">
         <div class="form-hero__copy">
           <p class="eyebrow">Rite Merit International Recruitment Agency</p>
-          <h1>Turn interest into an office visit.</h1>
+          <h1>Book your visit with Rite Merit.</h1>
           <p class="subtitle">
-            Use this form to move applicants toward a confirmed office visit,
-            with callback and follow-up options available when needed.
+            Fill out your details to request a visit, a call, or a follow-up
+            schedule with the Rite Merit team.
           </p>
         </div>
 
@@ -43,44 +43,51 @@
           <input type="hidden" name="agencyName" value="Rite Merit International Recruitment Agency" />
           <div class="panel-header form-panel__header">
             <div>
-              <p class="section-kicker">Appointment setter</p>
-              <h2>Guide every lead toward a visit.</h2>
+              <p class="section-kicker">Booking form</p>
+              <h2>Complete your appointment details.</h2>
             </div>
-            <p>Designed to capture the lead, confirm the details, and point them to the office quickly.</p>
+            <p>Use this form to submit your preferred schedule and contact information.</p>
           </div>
 
           <div class="form-summary" aria-label="Form highlights">
             <div class="form-summary__item">
-              <span>Best conversion path</span>
-              <strong>Visit the Office</strong>
+              <span>Confirmation</span>
+              <strong>Sent after booking</strong>
             </div>
             <div class="form-summary__item">
-              <span>Fastest support</span>
-              <strong>In-person assistance</strong>
+              <span>Visit options</span>
+              <strong>Call, office, or follow-up</strong>
             </div>
             <div class="form-summary__item">
               <span>Office details</span>
-              <strong>Included in confirmation</strong>
+              <strong>Included in your message</strong>
             </div>
+          </div>
+
+          <div class="applicant-callout">
+            <p class="applicant-callout__label">Next step for applicants</p>
+            <p class="applicant-callout__text">
+              To process your application and help market your profile to employers,
+              please visit our office. You may also schedule a visit, and one of
+              our representatives will contact you as soon as possible.
+            </p>
           </div>
 
           <div class="funnel-banner">
             <div class="funnel-banner__content">
-              <p class="funnel-banner__label">Recommended path</p>
-              <h3>Send applicants to the office for the fastest results.</h3>
+              <p class="funnel-banner__label">Recommended next step</p>
+              <h3>Visit the office for the quickest processing.</h3>
               <p>
-                Office visits help your team screen faster, answer questions in
-                person, and move qualified leads forward with less back-and-forth.
+                If you need a callback instead, you can still request one below.
               </p>
             </div>
-            <a class="funnel-banner__cta" href="#leadForm">Start office visit flow</a>
+            <a class="funnel-banner__cta" href="#leadForm">Continue</a>
           </div>
 
           <div class="form-section">
-            <h3>Start with the office visit</h3>
+            <h3>Choose your appointment type</h3>
             <p class="form-section__note">
-              Choose the office visit first when the applicant is ready to move
-              forward. Call and follow-up options stay available for softer leads.
+              Select the option that best matches what you need right now.
             </p>
             <div class="field-grid">
               <label class="field field--full">
@@ -93,16 +100,16 @@
                 </select>
               </label>
               <p class="field-helper field--full">
-                Tip: selecting <strong>Visit the Office</strong> creates the
-                strongest intent and gives the applicant a direct next step.
+                Tip: choose <strong>Visit the Office</strong> if you want the
+                quickest in-person assistance.
               </p>
             </div>
           </div>
 
           <div class="form-section">
-            <h3>Your details</h3>
+            <h3>Your contact details</h3>
             <p class="form-section__note">
-              We use these details to prepare the confirmation pass and the office schedule.
+              We use this information to send your confirmation and contact you if needed.
             </p>
             <div class="field-grid">
               <label class="field">
@@ -131,25 +138,25 @@
               </label>
 
               <label class="field field--full">
-                <span>Appointment Notes</span>
+                <span>Message or Notes</span>
                 <textarea
                   name="notes"
-                  placeholder="Add any special request, question, or preferred time window"
+                  placeholder="Add any special request, question, or preferred time"
                 ></textarea>
               </label>
             </div>
           </div>
 
           <div class="form-section">
-            <h3>Job details</h3>
+            <h3>Job preferences</h3>
             <p class="form-section__note">
-              These fields help the representative quickly identify the applicant's profile.
+              Share a few details so we can prepare the right appointment for you.
             </p>
             <div class="field-grid">
               <label class="field">
                 <span>Desired Position <em>*</em></span>
                 <select name="desiredPosition" required>
-                  <option value="">Select position</option>
+                  <option value="">Select your preferred position</option>
                   <option>Household Worker</option>
                   <option>Babysitter</option>
                   <option>House Cook</option>
@@ -160,7 +167,7 @@
               <label class="field">
                 <span>Desired Country <em>*</em></span>
                 <select name="desiredCountry" required>
-                  <option value="">Select country</option>
+                  <option value="">Select your preferred country</option>
                   <option>UAE Dubai</option>
                   <option>Qatar</option>
                 </select>
@@ -169,7 +176,7 @@
               <label class="field">
                 <span>Passport Status <em>*</em></span>
                 <select name="passportStatus" required>
-                  <option value="">Select status</option>
+                  <option value="">Select passport status</option>
                   <option>Valid Passport</option>
                   <option>Expired Passport</option>
                   <option>Passporting</option>
@@ -179,9 +186,9 @@
           </div>
 
           <div class="form-section">
-            <h3>Follow-up preference</h3>
+            <h3>Schedule details</h3>
             <p class="form-section__note">
-              Select the date and time the applicant should report or receive a callback.
+              Choose the date and time that works best for your visit or callback.
             </p>
             <div class="field-grid">
               <label class="field field--full">
@@ -211,7 +218,7 @@
           </div>
 
           <div class="actions">
-            <button type="submit" class="primary-btn">Book office visit</button>
+            <button type="submit" class="primary-btn">Confirm booking</button>
           </div>
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
         </form>
