@@ -1028,6 +1028,26 @@ body {
   line-height: 1.3;
 }
 
+.brand-strip__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  align-items: center;
+  color: #475569;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.brand-strip__license {
+  color: #0f766e;
+  font-weight: 800;
+}
+
+.brand-strip__divider {
+  color: #94a3b8;
+}
+
 .panel {
   background: var(--gf-surface);
   border: 1px solid var(--gf-border);
@@ -1061,6 +1081,26 @@ body {
   font-size: 1.08rem;
   line-height: 1.65;
   max-width: 58ch;
+}
+
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.hero-trust span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(26, 115, 232, 0.08);
+  color: #1f2937;
+  border: 1px solid rgba(26, 115, 232, 0.14);
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .rep-line {
@@ -1572,6 +1612,11 @@ textarea:focus {
     border-radius: 14px;
   }
 
+  .brand-strip__meta {
+    font-size: 0.7rem;
+    gap: 4px 6px;
+  }
+
   .form-hero {
     grid-template-columns: 1fr;
   }
@@ -1607,6 +1652,17 @@ textarea:focus {
     padding-bottom: 18px;
   }
 
+  .hero-trust {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .hero-trust span {
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 0.74rem;
+  }
+
   .form-summary {
     grid-template-columns: 1fr;
     padding-left: 16px;
@@ -1614,23 +1670,20 @@ textarea:focus {
   }
 
   .applicant-callout {
-    margin-left: 16px;
-    margin-right: 16px;
-    padding: 16px;
-    border-radius: 18px;
+    display: none;
   }
 
   .form-section {
     margin-left: 16px;
     margin-right: 16px;
-    padding: 18px 16px 16px;
+    padding: 16px 14px 14px;
     border-radius: 16px;
   }
 
   .funnel-banner {
     margin-left: 16px;
     margin-right: 16px;
-    padding: 16px;
+    padding: 14px;
     border-radius: 18px;
     flex-direction: column;
     align-items: flex-start;
@@ -1642,11 +1695,46 @@ textarea:focus {
 
   .form-panel__header h2,
   .list-panel h2 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   .form-panel__header p {
-    font-size: 0.86rem;
+    font-size: 0.84rem;
+  }
+
+  .form-summary__item {
+    padding: 12px 14px;
+  }
+
+  .form-summary__item span {
+    font-size: 0.68rem;
+  }
+
+  .form-summary__item strong {
+    font-size: 0.84rem;
+  }
+
+  .funnel-banner__content h3 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .funnel-banner__content p,
+  .applicant-callout__text,
+  .form-section__note,
+  .field-helper {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .form-section h3 {
+    font-size: 0.96rem;
+    margin-bottom: 12px;
+  }
+
+  .field span,
+  .choice-group legend {
+    font-size: 0.88rem;
   }
 
   .actions {
