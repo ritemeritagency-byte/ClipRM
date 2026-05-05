@@ -19,7 +19,7 @@ const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${e
 
 const dateField = form.querySelector('input[name="date"]');
 const submitBtn = form.querySelector('button[type="submit"]');
-const submitBtnDefaultLabel = submitBtn?.textContent?.trim() || "Confirm booking";
+const submitBtnDefaultLabel = submitBtn?.textContent?.trim() || "Submit follow-up";
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
 let lastSubmittedLead = null;
@@ -107,9 +107,9 @@ function buildAppointmentMessage(lead) {
   const lines = [
     `Hi, ${name},`,
     "",
-    `Your appointment is confirmed for ${dateText} at ${timeText}.`,
+    `Your follow-up is confirmed for ${dateText} at ${timeText}.`,
     `${purposeSummary}`,
-    `Purpose: ${clean(lead.purpose) || "Appointment"}`,
+    `Purpose: ${clean(lead.purpose) || "Follow-up"}`,
     `Position: ${position}`,
     `Country: ${country}`,
     "",
@@ -456,8 +456,8 @@ function ensureSuccessModal() {
     <div class="success-modal__backdrop" data-close-success></div>
     <div class="success-modal__panel panel" role="dialog" aria-modal="true" aria-labelledby="successTitle">
       <div class="success-card__icon">✓</div>
-      <p class="section-kicker">Appointment booked</p>
-      <h2 id="successTitle">Thanks. We received your appointment request.</h2>
+      <p class="section-kicker">Follow-up booked</p>
+      <h2 id="successTitle">Thanks. We received your follow-up request.</h2>
       <p class="success-card__code-label">Reference code</p>
       <p class="success-card__code" id="generatedCode"></p>
       <div class="success-card__pass-shell">
