@@ -1089,14 +1089,27 @@ body {
 .hero-trust span {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   min-height: 32px;
-  padding: 0 12px;
+  padding: 0 12px 0 30px;
   border-radius: 999px;
   background: rgba(26, 115, 232, 0.08);
   color: #1f2937;
   border: 1px solid rgba(26, 115, 232, 0.14);
   font-size: 0.8rem;
   font-weight: 700;
+  position: relative;
+}
+
+.hero-trust span::before {
+  content: "✓";
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #188038;
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .rep-line {
@@ -1655,8 +1668,12 @@ textarea:focus {
 
   .hero-trust span {
     min-height: 30px;
-    padding: 0 10px;
+    padding: 0 10px 0 28px;
     font-size: 0.74rem;
+  }
+
+  .hero-trust span::before {
+    left: 10px;
   }
 
   .form-summary {

@@ -63,7 +63,7 @@ function normalizeLeadPayload(rawPayload) {
   const payload = rawPayload || {};
 
   return {
-    agencyName: asText(payload.agencyName || "Rite Merit International Recruitment Agency"),
+    agencyName: asText(payload.agencyName || "Rite Merit International Manpower Corporation"),
     fullName: asText(payload.fullName || payload.workerName || ""),
     phoneNumber: asText(payload.phoneNumber || ""),
     emailAddress: asText(payload.emailAddress || ""),
