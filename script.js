@@ -18,6 +18,8 @@ const officeMapUrl = `https://www.google.com/maps?q=${encodeURIComponent(officeA
 const officeDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddress)}`;
 
 const dateField = form.querySelector('input[name="date"]');
+const submitBtn = form.querySelector('button[type="submit"]');
+const submitBtnDefaultLabel = submitBtn?.textContent?.trim() || "Book office visit";
 let lastGeneratedMessage = "";
 let lastConfirmationCode = "";
 let lastSubmittedLead = null;
@@ -87,7 +89,7 @@ function getPurposeSummary(purpose) {
     case "Receive a Call from a Rite Merit Representative":
       return "We will call you at your scheduled time.";
     case "Visit the Office":
-      return "Please report to our office at the time you selected.";
+      return "This is the fastest path to in-person assistance at the office.";
     case "Schedule a Follow-Up Call":
       return "Our representative will follow up with you by phone.";
     default:
@@ -773,7 +775,7 @@ form.addEventListener("submit", async (event) => {
     setStatus("We could not submit your form right now. Please try again.", "error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Submit";
+    submitBtn.textContent = submitBtnDefaultLabel;
   }
 });
 
