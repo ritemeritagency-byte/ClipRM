@@ -1044,10 +1044,6 @@ body {
   font-weight: 800;
 }
 
-.brand-strip__divider {
-  color: #94a3b8;
-}
-
 .panel {
   background: var(--gf-surface);
   border: 1px solid var(--gf-border);
