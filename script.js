@@ -365,7 +365,6 @@ function normalizeLead(rawLead) {
   const time = clean(rawLead.time);
   return {
     agencyName: clean(rawLead.agencyName) || "Rite Merit International Recruitment Agency",
-    representativeName: clean(rawLead.representativeName) || "Clip",
     purpose: clean(rawLead.purpose),
     fullName: clean(rawLead.fullName) || clean(rawLead.workerName),
     phoneNumber: clean(rawLead.phoneNumber),
@@ -433,6 +432,14 @@ async function syncLeadToGoogleSheets(lead) {
 
 function resetStatus() {
   setStatus("");
+}
+
+function resetAfterSuccess() {
+  lastSubmittedLead = null;
+  lastGeneratedMessage = "";
+  lastConfirmationCode = "";
+  resetStatus();
+  form.reset();
 }
 
 function ensureSuccessModal() {
@@ -725,6 +732,7 @@ function hideSuccessModal() {
   successModal.hidden = true;
   successModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  resetAfterSuccess();
   window.requestAnimationFrame(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     form.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -3,7 +3,6 @@ const SHEET_NAME = "Schedule";
 const HEADER_ROW = [
   "Timestamp",
   "Agency Name",
-  "Representative Name",
   "Full Name",
   "Phone Number",
   "Email Address",
@@ -47,14 +46,25 @@ function formatTimeDisplay(value) {
 function normalizePurpose(value) {
   switch (asText(value)) {
     case "Receive Call":
+    case "Receive a Call from a Rite Merit Representative":
       return "Receive a Call from a Rite Merit Representative";
     case "Visit to Office":
+    case "Visit the Office":
       return "Visit the Office";
     case "Schedule Call":
+    case "Schedule a Follow-Up Call":
       return "Schedule a Follow-Up Call";
     default:
       return asText(value);
   }
+}
+
+function doGet() {
+  migrateSheetHeaders();
+  return jsonResponse({
+    ok: true,
+    message: "Rite Merit appointment endpoint is running.",
+  });
 }
 
 function doPost(e) {
@@ -66,17 +76,17 @@ function doPost(e) {
     if (!asText(payload.emailAddress || "")) {
       return jsonResponse({ ok: false, error: "Email Address is required." });
     }
-    const sheet = getOrCreateSheet();
+    const sheet = migrateSheetHeaders();
     const emailResult = sendConfirmationEmail(payload);
+    const purpose = normalizePurpose(payload.purpose || "");
 
     sheet.appendRow([
       new Date(),
       asText(payload.agencyName || ""),
-      asText(payload.representativeName || ""),
       asText(payload.fullName || payload.workerName || ""),
       asText(payload.phoneNumber || ""),
       asText(payload.emailAddress || ""),
-      normalizePurpose(payload.purpose || ""),
+      purpose,
       asText(payload.date || ""),
       formatTimeDisplay(payload.time || ""),
       asText(payload.location || ""),
@@ -151,6 +161,18 @@ function getOrCreateSheet() {
   }
 
   sheet.setFrozenRows(1);
+
+  return sheet;
+}
+
+function migrateSheetHeaders() {
+  const sheet = getOrCreateSheet();
+  const currentHeaders = sheet.getRange(1, 1, 1, HEADER_ROW.length).getValues()[0];
+  const needsMigration = HEADER_ROW.some((header, index) => currentHeaders[index] !== header);
+
+  if (needsMigration) {
+    sheet.getRange(1, 1, 1, HEADER_ROW.length).setValues([HEADER_ROW]);
+  }
 
   return sheet;
 }
