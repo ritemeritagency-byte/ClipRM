@@ -1031,20 +1031,65 @@ body {
 
 .hero-visual {
   margin: 0;
-  background: #f6f3ff;
+  position: relative;
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 36%),
+    linear-gradient(180deg, #f7f7ff, #eef2ff);
   border-left: 1px solid var(--gf-border);
-  padding: 12px;
+  padding: 0;
   display: flex;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .hero-visual img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  aspect-ratio: 5 / 7;
   background: #fff;
-  border-radius: 12px;
+}
+
+.hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.78));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-visual__caption {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2);
+}
+
+.hero-visual__caption span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #dbeafe;
+}
+
+.hero-visual__caption strong {
+  font-size: 0.94rem;
+  line-height: 1.45;
+  font-weight: 700;
 }
 
 .eyebrow,
@@ -1480,7 +1525,14 @@ textarea:focus {
   }
 
   .hero-visual img {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 5 / 7;
+  }
+
+  .hero-visual__caption {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding: 12px 14px;
   }
 
   .form-hero__copy,
